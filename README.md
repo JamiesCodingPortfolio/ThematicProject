@@ -1,1 +1,1 @@
-# ThematicProject
+# DiscordBot

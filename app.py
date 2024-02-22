@@ -3,7 +3,6 @@ from discord.ext import commands
 
 # Define the intents your client will use
 intents = discord.Intents.default()
-intents.messages = True  # Enable the ability to receive message events
 
 # Initialize the Client object with the defined intents
 bot = commands.Bot(command_prefix='boom!', intents=intents)

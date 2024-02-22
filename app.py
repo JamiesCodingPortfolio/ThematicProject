@@ -1,5 +1,4 @@
 import discord
-from discord.ext import commands
 
 # Define the intents your bot will use
 intents = discord.Intents.default()
@@ -16,7 +15,3 @@ async def on_ready():
 async def hello(ctx):
     print('Hello command executed')
     await ctx.send('Hello {0.author.mention}!')
-
-
-
-bot.run('MTIxMDE1MjE2NzA0NzE3NjI2Mg.GOzzpL.IhrtlucFhSe0mGb6XYcvxTxVTmqGnp60U4cQAY')

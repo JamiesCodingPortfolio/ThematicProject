@@ -33,4 +33,4 @@ async def aboutcommands(ctx):
 
 
 # Run the bot with your bot token
-bot.run()
+bot.run('')

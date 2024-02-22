@@ -16,5 +16,3 @@ async def on_ready():
 async def hello(ctx):
     print('Hello command executed')
     await ctx.send('Hello {0.author.mention}!')
-
-bot.run('MTIxMDE1MjE2NzA0NzE3NjI2Mg.GxNgJN.EEDDAXX8XGAxBh5NLE40pTzXoYHhVQI__UDb-0')

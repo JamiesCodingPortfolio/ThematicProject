@@ -2,7 +2,6 @@
 import logging
 logging.basicConfig(level=logging.INFO)
 #For relative pathing for auth token
-import os
 from pathlib import Path
 #DiscordPy imports
 import discord

@@ -1,12 +1,31 @@
+#Logging import to log stuff and setup
+import logging
+logging.basicConfig(level=logging.INFO)
+#For relative pathing for auth token
+import os
+from pathlib import Path
+#DiscordPy imports
 import discord
 from discord.ext import commands
+
+#grabs discord bot token from text file
+desktop_path = Path.home() / "Desktop"
+
+token_file_path = desktop_path / "Bot token.txt"
+
+if not token_file_path.is_file():
+    logging.error("Token file not found on the desktop.")
+    exit()
+
+with open(token_file_path, 'r') as file:
+    bot_token = file.read()
 
 # Define the intents your client will use
 intents = discord.Intents.all()
 #intents.messages = True  # Enable the ability to receive message events
 
 # Initialize the Client object with the defined intents
-bot = commands.Bot(command_prefix='emp!', intents=intents)
+bot = commands.Bot(command_prefix='!', intents=intents)
 
 @bot.event
 async def on_ready():
@@ -33,4 +52,4 @@ async def aboutcommands(ctx):
 
 
 # Run the bot with your bot token
-bot.run('')
+bot.run(bot_token)

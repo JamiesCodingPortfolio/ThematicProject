@@ -8,6 +8,8 @@ import discord
 from discord.ext import commands
 #To grab whoever is running the bot
 import socket
+#imports other folders/dependencies
+import commands
 
 #grabs discord bot token from text file
 desktop_path = Path.home() / "Desktop"

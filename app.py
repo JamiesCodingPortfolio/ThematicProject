@@ -6,6 +6,8 @@ from pathlib import Path
 #DiscordPy imports
 import discord
 from discord.ext import commands
+#To grab whoever is running the bot
+import socket
 
 #grabs discord bot token from text file
 desktop_path = Path.home() / "Desktop"
@@ -48,6 +50,10 @@ async def aboutcommands(ctx):
         embed.add_field(name=f"emp!{command.name}", value=command.help, inline=False)
 
     await ctx.send(embed=embed)
+
+@bot.command(help="displays what PC is currently running the bot process")
+async def runningbot(ctx):
+    await ctx.send('The PC currently running this bot process is ' + socket.gethostname())
 
 
 # Run the bot with your bot token

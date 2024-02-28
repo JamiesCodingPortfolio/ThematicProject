@@ -53,7 +53,7 @@ async def aboutcommands(ctx):
 
 @bot.command(help="displays what PC is currently running the bot process")
 async def runningbot(ctx):
-    await ctx.send('The PC currently running this bot process is ' + socket.gethostname())
+    await ctx.send('The PC currently running this bot is ' + socket.gethostname())
 
 
 # Run the bot with your bot token

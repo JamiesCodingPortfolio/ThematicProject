@@ -9,16 +9,18 @@ from discord.ext import commands
 #To grab whoever is running the bot
 import socket
 #imports other folders/dependencies
-import commands
+import newCommands
+from adminCommands import restart
 
 #grabs discord bot token from text file
+
 desktop_path = Path.home() / "Desktop"
 
 token_file_path = desktop_path / "Bot token.txt"
 
 if not token_file_path.is_file():
     logging.error("Token file not found on the desktop.")
-    exit()
+    #exit()
 
 with open(token_file_path, 'r') as file:
     bot_token = file.read()
@@ -49,7 +51,7 @@ async def aboutcommands(ctx):
     )
 
     for command in bot.commands:
-        embed.add_field(name=f"emp!{command.name}", value=command.help, inline=False)
+        embed.add_field(name=f"!{command.name}", value=command.help, inline=False)
 
     await ctx.send(embed=embed)
 
@@ -57,6 +59,9 @@ async def aboutcommands(ctx):
 async def runningbot(ctx):
     await ctx.send('The PC currently running this bot is ' + socket.gethostname())
 
+@bot.command(help="restarts the bot completely")
+async def restartbot(ctx):
+    restart()
 
 # Run the bot with your bot token
 bot.run(bot_token)

@@ -49,7 +49,7 @@ async def aboutcommands(ctx):
     )
 
     for command in bot.commands:
-        embed.add_field(name=f"emp!{command.name}", value=command.help, inline=False)
+        embed.add_field(name=f"!{command.name}", value=command.help, inline=False)
 
     await ctx.send(embed=embed)
 

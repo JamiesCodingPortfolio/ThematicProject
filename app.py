@@ -70,5 +70,10 @@ async def runningbot(ctx):
 # async def restartbot():
 #     restart()
 
+@bot.command(help="Shuts down the bot")
+async def botshutdown(ctx):
+    await ctx.send('Shutting down bot')
+    await bot.close()
+
 # Run the bot with your bot token
 bot.run(bot_token)

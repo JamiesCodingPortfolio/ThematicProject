@@ -37,7 +37,7 @@ bot.add_command(flashcardmaker.deleteflashcard)
 @bot.event
 async def on_ready():
     print('Logged in as {0.user}'.format(bot))
-    #await bot.send('The bot is running and the PC currently running this bot is ' + socket.gethostname())
+    await ctx.send('The bot is running and the PC currently running this bot is ' + socket.gethostname())
 
 @bot.command(help="Says hello back to whoever said hello")
 async def hello(ctx):

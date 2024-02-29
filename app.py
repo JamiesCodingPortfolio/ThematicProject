@@ -13,12 +13,12 @@ from adminCommands import restart
 from newCommands import flashcardmaker
 
 #grabs discord bot token from text file
-desktop_path = Path.home() / "Desktop"
+directory = Path(__file__).resolve().parent.parent
 
-token_file_path = desktop_path / "Bot token.txt"
+token_file_path = directory / "Bot token.txt"
 
 if not token_file_path.is_file():
-    logging.error("Token file not found on the desktop.")
+    logging.error("Token file not found.")
     exit()
 
 with open(token_file_path, 'r') as file:
@@ -32,6 +32,7 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 
 bot.add_command(flashcardmaker.makeflashcard)
 bot.add_command(flashcardmaker.defineflashcard)
+bot.add_command(flashcardmaker.deleteflashcard)
 
 @bot.event
 async def on_ready():
@@ -62,7 +63,7 @@ async def runningbot(ctx):
     await ctx.send('The PC currently running this bot is ' + socket.gethostname())
 
 @bot.command(help="restarts the bot completely")
-async def restartbot(ctx):
+async def restartbot():
     restart()
 
 # Run the bot with your bot token

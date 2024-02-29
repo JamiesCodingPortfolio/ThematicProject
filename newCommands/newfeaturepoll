@@ -1,0 +1,18 @@
+from discord.ext import commands
+import discord
+
+@commands.command()
+async def newfeaturepoll(ctx, *, question):
+    # Create an embed message with the poll question
+    embed = discord.Embed(
+        title="New Feature Poll",
+        description=question,
+        color=discord.Color.blue()
+    )
+
+    # Send the embed message to the channel where the command was invoked
+    poll_embed = await ctx.send(embed=embed)
+
+    # Add reactions for users to vote
+    await poll_embed.add_reaction('👍')  # Thumbs up for yes
+    await poll_embed.add_reaction('👎')  # Thumbs down for no

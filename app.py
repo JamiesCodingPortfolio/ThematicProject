@@ -13,15 +13,13 @@ from adminCommands import restart
 from newCommands import flashcardmaker
 
 #grabs discord bot token from text file
+desktop_path = Path.home() / "Desktop"
 
-# Get the directory of the Python script
-script_directory = Path(__file__).resolve().parent.parent
-
-token_file_path = script_directory / "Bot token.txt"
+token_file_path = desktop_path / "Bot token.txt"
 
 if not token_file_path.is_file():
     logging.error("Token file not found on the desktop.")
-    #exit()
+    exit()
 
 with open(token_file_path, 'r') as file:
     bot_token = file.read()
@@ -38,6 +36,7 @@ bot.add_command(flashcardmaker.defineflashcard)
 @bot.event
 async def on_ready():
     print('Logged in as {0.user}'.format(bot))
+    #await bot.send('The bot is running and the PC currently running this bot is ' + socket.gethostname())
 
 @bot.command(help="Says hello back to whoever said hello")
 async def hello(ctx):

@@ -37,7 +37,11 @@ bot.add_command(flashcardmaker.deleteflashcard)
 @bot.event
 async def on_ready():
     print('Logged in as {0.user}'.format(bot))
-    #await bot.send('The bot is running and the PC currently running this bot is ' + socket.gethostname())
+    channel = bot.get_channel(1210173481170374688)
+    if channel is not None:
+        await channel.send('The bot is running and the PC currently running this bot is ' + socket.gethostname())
+    else:
+        print("Channel not found.")
 
 @bot.command(help="Says hello back to whoever said hello")
 async def hello(ctx):

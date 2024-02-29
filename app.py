@@ -26,8 +26,9 @@ with open(token_file_path, 'r') as file:
     bot_token = file.read()
 
 # Define the intents your client will use
-intents = discord.Intents.all()
-#intents.messages = True  # Enable the ability to receive message events
+intents = discord.Intents.default()
+intents.messages = True  # Enable the ability to receive message events
+intents.guilds = True  # Enable the ability to receive guild (server) events
 
 # Initialize the Client object with the defined intents
 bot = commands.Bot(command_prefix='!', intents=intents)

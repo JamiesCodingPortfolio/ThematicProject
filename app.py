@@ -14,9 +14,10 @@ from adminCommands import restart
 
 #grabs discord bot token from text file
 
-desktop_path = Path.home() / "Desktop"
+# Get the directory of the Python script
+script_directory = Path(__file__).resolve().parent.parent
 
-token_file_path = desktop_path / "Bot token.txt"
+token_file_path = script_directory / "Bot token.txt"
 
 if not token_file_path.is_file():
     logging.error("Token file not found on the desktop.")
@@ -26,9 +27,7 @@ with open(token_file_path, 'r') as file:
     bot_token = file.read()
 
 # Define the intents your client will use
-intents = discord.Intents.default()
-intents.messages = True  # Enable the ability to receive message events
-intents.guilds = True  # Enable the ability to receive guild (server) events
+intents = discord.Intents.all()
 
 # Initialize the Client object with the defined intents
 bot = commands.Bot(command_prefix='!', intents=intents)

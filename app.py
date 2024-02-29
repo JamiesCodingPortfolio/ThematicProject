@@ -9,8 +9,8 @@ from discord.ext import commands
 #To grab whoever is running the bot
 import socket
 #imports other folders/dependencies
-import newCommands
 from adminCommands import restart
+from newCommands import flashcardmaker
 
 #grabs discord bot token from text file
 
@@ -31,6 +31,9 @@ intents = discord.Intents.all()
 
 # Initialize the Client object with the defined intents
 bot = commands.Bot(command_prefix='!', intents=intents)
+
+bot.add_command(flashcardmaker.makeflashcard)
+bot.add_command(flashcardmaker.defineflashcard)
 
 @bot.event
 async def on_ready():

@@ -35,7 +35,7 @@ bot.add_command(flashcardmaker.defineflashcard)
 bot.add_command(flashcardmaker.deleteflashcard)
 
 @bot.event
-async def on_ready(ctx):
+async def on_ready():
     print('Logged in as {0.user}'.format(bot))
     await ctx.send('The bot is running and the PC currently running this bot is ' + socket.gethostname())
 
@@ -62,9 +62,9 @@ async def aboutcommands(ctx):
 async def runningbot(ctx):
     await ctx.send('The PC currently running this bot is ' + socket.gethostname())
 
-@bot.command(help="restarts the bot completely")
-async def restartbot():
-    restart()
+# @bot.command(help="restarts the bot completely")
+# async def restartbot():
+#     restart()
 
 # Run the bot with your bot token
 bot.run(bot_token)

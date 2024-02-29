@@ -13,9 +13,9 @@ from adminCommands import restart
 from newCommands import flashcardmaker
 
 #grabs discord bot token from text file
-directory = Path(__file__).resolve().parent.parent
+desktop_path = Path.home() / "Desktop"
 
-token_file_path = directory / "Bot token.txt"
+token_file_path = desktop_path / "Bot token.txt"
 
 if not token_file_path.is_file():
     logging.error("Token file not found.")
@@ -35,7 +35,7 @@ bot.add_command(flashcardmaker.defineflashcard)
 bot.add_command(flashcardmaker.deleteflashcard)
 
 @bot.event
-async def on_ready():
+async def on_ready(ctx):
     print('Logged in as {0.user}'.format(bot))
     await ctx.send('The bot is running and the PC currently running this bot is ' + socket.gethostname())
 

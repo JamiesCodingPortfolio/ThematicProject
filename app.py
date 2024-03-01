@@ -37,7 +37,7 @@ bot.add_command(flashcardmaker.deleteflashcard)
 @bot.event
 async def on_ready():
     print('Logged in as {0.user}'.format(bot))
-    channel = bot.get_channel(1210173481170374688)
+    channel = bot.get_channel(1213101656963678260)
     if channel is not None:
         await channel.send('The bot is running and the PC currently running this bot is ' + socket.gethostname())
     else:

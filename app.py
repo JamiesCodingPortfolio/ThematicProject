@@ -44,8 +44,8 @@ async def on_ready():
         print("Channel not found.")
 
 @bot.command(help="Says hello back to whoever said hello")
-async def hello(ctx):
-    await ctx.send(f'Hello {ctx.author.mention}!')
+async def hello(hello):
+    await hello.send(f'Hello {hello.author.mention}!')
 
 
 

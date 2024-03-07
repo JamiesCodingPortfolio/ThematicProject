@@ -1,2 +1,6 @@
 # DiscordBot
-Uses the discordpy library which can be found at: https://discordpy.readthedocs.io/en/stable/
+Uses the discordpy library.
+
+## Dependencies
+https://discordpy.readthedocs.io/en/stable/
+https://www.mongodb.com/docs/manual/

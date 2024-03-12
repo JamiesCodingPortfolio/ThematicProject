@@ -50,7 +50,7 @@ async def hello(hello):
 
 
 @bot.command(help="Lists all the bot's commands and what they do")
-async def aboutcommands(ctx):
+async def aboutcommands(help):
     embed = discord.Embed(
         title="Empowerment Bot Commands List",
         description="Here are all the commands that I can perform:",
@@ -60,19 +60,19 @@ async def aboutcommands(ctx):
     for command in bot.commands:
         embed.add_field(name=f"!{command.name}", value=command.help, inline=False)
 
-    await ctx.send(embed=embed)
+    await help.send(embed=embed)
 
 @bot.command(help="displays what PC is currently running the bot process")
-async def runningbot(ctx):
-    await ctx.send('The PC currently running this bot is ' + socket.gethostname())
+async def runningbot(runBot):
+    await runBot.send('The PC currently running this bot is ' + socket.gethostname())
 
 # @bot.command(help="restarts the bot completely")
 # async def restartbot():
 #     restart()
 
 @bot.command(help="Shuts down the bot")
-async def botshutdown(ctx):
-    await ctx.send('Shutting down bot')
+async def botshutdown(shutdown):
+    await shutdown.send('Shutting down bot')
     await bot.close()
 
 # Run the bot with your bot token

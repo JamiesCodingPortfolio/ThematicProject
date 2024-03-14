@@ -5,7 +5,7 @@ import asyncio
 userflashcards = {}
 
 # Command to make a flashcard
-@commands.command()
+@commands.command(help="Creates a new flashcard with a concept and definition")
 async def makeflashcard(ctx):
 
     # Get the user ID
@@ -48,7 +48,7 @@ async def makeflashcard(ctx):
 
 
 # Command to retrieve a flashcard
-@commands.command()
+@commands.command(help="Gives the definition of an existing flash card concept")
 async def defineflashcard(ctx, *, concept=None):
 
     # Get the user ID
@@ -68,7 +68,7 @@ async def defineflashcard(ctx, *, concept=None):
 
 
 # Command to delete a flashcard
-@commands.command()
+@commands.command( help="Deletes a flash card if it exists")
 async def deleteflashcard(ctx, *, concept=None):
 
     # Get the user ID

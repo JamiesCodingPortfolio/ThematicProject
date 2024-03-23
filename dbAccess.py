@@ -1,3 +1,6 @@
+#Imports error logging
+import logging
+
 #Imports pathing commands
 from pathlib import Path
 
@@ -8,6 +11,10 @@ import pymongo
 desktop_path = Path.home() / "Desktop"
 
 database_access = desktop_path / "database_access.txt"
+
+if not database_access.is_file():
+    logging.error("Token file not found.")
+    exit()
 
 with open(database_access, 'r') as file:
     database_access_url = file.read()

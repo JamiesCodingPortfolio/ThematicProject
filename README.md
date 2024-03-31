@@ -10,3 +10,4 @@ https://www.mongodb.com/docs/manual/
 Found in variables.txt file:
 - `MONGODBPATH` by default uses the localhost connection string - change if you're using anything more than the default connection string
 - `BOT_TOKEN` make sure to add your personal bot token
+- `ADMINCHANNEL` this is for debugging to test the bot is working, put a channelID in here that you want the bot to post in

@@ -11,21 +11,12 @@ import socket
 #imports other folders/dependencies
 from adminCommands import restart
 from newCommands import flashcardmaker
-
-#grabs discord bot token from text file
-desktop_path = Path.home() / "Desktop"
-
-#fetches the "Bot token.txt file"
-token_file_path = desktop_path / "Bot token.txt"
+from variablesImport import BOT_TOKEN,ADMINCHANNEL
 
 #error handling for if the token file is not found
-if not token_file_path.is_file():
+if BOT_TOKEN == '':
     logging.error("Token file not found.")
     exit()
-
-#reads the token file is it is found
-with open(token_file_path, 'r') as file:
-    bot_token = file.read()
 
 # Define the intents your client will use
 intents = discord.Intents.all()
@@ -42,7 +33,7 @@ bot.add_command(flashcardmaker.deleteflashcard)
 @bot.event
 async def on_ready():
     print('Logged in as {0.user}'.format(bot))
-    channel = bot.get_channel(1213101656963678260)
+    channel = bot.get_channel(int(ADMINCHANNEL))
     if channel is not None:
         await channel.send('The bot is running and the PC currently running this bot is ' + socket.gethostname())
     else:
@@ -83,4 +74,4 @@ async def botshutdown(shutdown):
     await bot.close()
 
 # Run the bot with your bot token
-bot.run(bot_token)
+bot.run(BOT_TOKEN)

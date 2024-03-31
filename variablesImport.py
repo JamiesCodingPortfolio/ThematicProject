@@ -1,5 +1,6 @@
 MONGODBPATH = ''
 BOT_TOKEN = ''
+ADMINCHANNEL = ''
 
 with open("variables.txt", "r") as file:
         # Read the content of the file
@@ -16,5 +17,7 @@ with open("variables.txt", "r") as file:
         globals()[variable_name.strip()] = value
 
         # Test the variable
+        
 print(MONGODBPATH)
 print(BOT_TOKEN)
+print(ADMINCHANNEL)

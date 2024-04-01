@@ -1,6 +1,7 @@
 #Custom ignore files
 
 variables.txt
+logs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

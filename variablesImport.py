@@ -3,20 +3,19 @@ BOT_TOKEN = ''
 ADMINCHANNEL = ''
 
 with open("variables.txt", "r") as file:
-        # Read the content of the file
-    #content = file.read()
-    for item in file:
+    # Read the content of the file
+    for line in file:
         
-        # Split the content by '=' to separate the variable name and its value
-        variable_name, value = item.split('=', 1)
+        # Split the content using the first '=' present to separate the variable name and its path/value
+        variable_name, value = line.split('=', 1)
 
-        # Remove any leading or trailing whitespace from the value
+        # Removes any whitespace from the value
         value = value.strip()
 
         # Create the variable dynamically using globals()
         globals()[variable_name.strip()] = value
 
-        # Test the variable
+# Prints each variable in the console for debugging
         
 print(MONGODBPATH)
 print(BOT_TOKEN)

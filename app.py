@@ -9,9 +9,9 @@ from discord.ext import commands
 #To grab whoever is running the bot
 import socket
 #imports other folders/dependencies
-from adminCommands import restart
+from adminCommands import *
 from newCommands import flashcardmaker
-from variablesImport import BOT_TOKEN,ADMINCHANNEL
+from variablesImport import BOT_TOKEN, ADMINCHANNEL
 
 #error handling for if the token file is not found
 if BOT_TOKEN == '':
@@ -30,14 +30,23 @@ bot.add_command(flashcardmaker.defineflashcard)
 bot.add_command(flashcardmaker.deleteflashcard)
 
 #states that the bot is running, with the name of the device that is running it
+print(ADMINCHANNEL)
+adminChannel = bot.get_channel(int(ADMINCHANNEL))
+
 @bot.event
 async def on_ready():
     print('Logged in as {0.user}'.format(bot))
-    channel = bot.get_channel(int(ADMINCHANNEL))
-    if channel is not None:
-        await channel.send('The bot is running and the PC currently running this bot is ' + socket.gethostname())
+    adminChannel = bot.get_channel(int(ADMINCHANNEL))
+    if adminChannel is not None:
+        await adminChannel.send('The bot is running and the PC currently running this bot is ' + socket.gethostname())
     else:
         print("Channel not found.")
+        
+@bot.event
+async def on_message(message):
+    adminChannel = bot.get_channel(int(ADMINCHANNEL))
+    await adminChannel.send(message.content)
+    
 
 #implements a 'hello' command that says hello back to whoever said it
 @bot.command(help="Says hello back to whoever said hello")
@@ -63,10 +72,6 @@ async def aboutcommands(help):
 @bot.command(help="Displays what PC is currently running the bot process")
 async def runningbot(runBot):
     await runBot.send('The PC currently running this bot is ' + socket.gethostname())
-
-# @bot.command(help="restarts the bot completely")
-# async def restartbot():
-#     restart()
 
 @bot.command(help="Shuts down the bot")
 async def botshutdown(shutdown):

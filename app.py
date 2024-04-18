@@ -5,13 +5,14 @@ logging.basicConfig(level=logging.INFO)
 from pathlib import Path
 #DiscordPy imports
 import discord
+from discord import app_commands
 from discord.ext import commands
 #To grab whoever is running the bot
 import socket
 #imports other folders/dependencies
 from adminCommands import *
 from Commands import flashcardmaker
-from Commands import *
+from Commands import hello
 from variablesImport import BOT_TOKEN, ADMINCHANNEL
 from commandImports import *
 
@@ -21,22 +22,34 @@ if BOT_TOKEN == '':
     exit()
 
 # Define the intents your client will use
-intents = discord.Intents.all()
 
 # Initialize the Client object with the defined intents
-bot = commands.Bot(command_prefix='!', intents=intents)
+bot = commands.Bot(command_prefix='!', intents= discord.Intents.all())
+
+
 
 #imports other commands from other files
-bot.add_command(flashcardmaker.makeflashcard)
-bot.add_command(flashcardmaker.defineflashcard)
-bot.add_command(flashcardmaker.deleteflashcard)
-#bot.add_command(runningCommand.runningbot)
+
+async def setup():
+    await bot.add_command(flashcardmaker.makeflashcard)
+    await bot.add_command(flashcardmaker.defineflashcard)
+    await bot.add_command(flashcardmaker.deleteflashcard)
+    await bot.load_extension("hello")
+    #bot.add_command(runningCommand.runningbot)
 
 #states that the bot is running, with the name of the device that is running is
+
+
 
 @bot.event
 async def on_ready():
     print('Logged in as {0.user}'.format(bot))
+    await bot.load_extension("hello")
+    try:
+        synced = await bot.tree.sync()
+        print(f"Synced {len(synced)} command(s)")
+    except Exception as e:
+        print(e)
     adminChannel = bot.get_channel(int(ADMINCHANNEL))
     if adminChannel is not None:
         await adminChannel.send('The bot is running and the PC currently running this bot is ' + socket.gethostname())

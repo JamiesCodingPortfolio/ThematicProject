@@ -1,6 +1,6 @@
-MONGODBPATH = ''
-BOT_TOKEN = ''
-ADMINCHANNEL = ''
+#MONGODBPATH = ''
+#BOT_TOKEN = ''
+#ADMINCHANNEL = ''
 
 with open("variables.txt", "r") as file:
     # Read the content of the file
@@ -16,7 +16,3 @@ with open("variables.txt", "r") as file:
         globals()[variable_name.strip()] = value
 
 # Prints each variable in the console for debugging
-        
-print(MONGODBPATH)
-print(BOT_TOKEN)
-print(ADMINCHANNEL)

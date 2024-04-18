@@ -29,9 +29,7 @@ bot.add_command(flashcardmaker.makeflashcard)
 bot.add_command(flashcardmaker.defineflashcard)
 bot.add_command(flashcardmaker.deleteflashcard)
 
-#states that the bot is running, with the name of the device that is running it
-print(ADMINCHANNEL)
-adminChannel = bot.get_channel(int(ADMINCHANNEL))
+#states that the bot is running, with the name of the device that is running is
 
 @bot.event
 async def on_ready():
@@ -42,10 +40,10 @@ async def on_ready():
     else:
         print("Channel not found.")
         
-@bot.event
-async def on_message(message):
-    adminChannel = bot.get_channel(int(ADMINCHANNEL))
-    await adminChannel.send(message.content)
+#@bot.event
+#async def on_message(message):
+    #adminChannel = bot.get_channel(int(ADMINCHANNEL))
+    #await adminChannel.send(message.content)
     
 
 #implements a 'hello' command that says hello back to whoever said it

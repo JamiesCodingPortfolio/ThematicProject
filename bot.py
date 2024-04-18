@@ -16,7 +16,7 @@ class Client(commands.Bot):
         
     async def setup_hook(self):
         for ext in self.cogslist:
-            self.load_extension(ext)
+            await self.load_extension(ext)
         #self.add_command(flashcardmaker.makeflashcard)
         #self.add_command(flashcardmaker.defineflashcard)
         #self.add_command(flashcardmaker.deleteflashcard)

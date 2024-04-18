@@ -1,6 +1,7 @@
 #MONGODBPATH = ''
 #BOT_TOKEN = ''
 #ADMINCHANNEL = ''
+#ADMINSERVER = ''
 
 with open("variables.txt", "r") as file:
     # Read the content of the file

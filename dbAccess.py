@@ -1,22 +1,10 @@
-#Imports error logging
 import logging
-
-#Imports pathing commands
-from pathlib import Path
-
-#Imports required pymongo library
 import pymongo
-
-#import the database path
 from variablesImport import MONGODBPATH
 
-#Finds file paths
-desktop_path = Path.home() / "Desktop"
-
-database_access = desktop_path / "database_access.txt"
-
-if not database_access.is_file():
-    logging.error("Token file not found.")
+#Checks Mongo DB Path
+if MONGODBPATH == '':
+    logging.error("Mongo DB Path not provided.")
     exit()
 
 database_access_url = str(MONGODBPATH)
@@ -29,4 +17,4 @@ servers = db['servers']
 
 result = servers.find()
 for document in result:
-    print (document["Server ID"])
+    print (document["ServerID"])

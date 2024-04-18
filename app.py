@@ -21,9 +21,7 @@ if BOT_TOKEN == '':
     logging.error("Token file not found.")
     exit()
 
-# Define the intents your client will use
-
-# Initialize the Client object with the defined intents
+# Initializes the bot from the Client class
 
 bot = Client()
 
@@ -52,11 +50,6 @@ async def aboutcommands(help):
         embed.add_field(name=f"!{command.name}", value=command.help, inline=False)
 
     await help.send(embed=embed)
-
-#implements a 'runningbot' command that states the bot is running, with the device it is running on
-@bot.command(help="Displays what PC is currently running the bot process")
-async def runningbot(runBot):
-    await runBot.send('The PC currently running this bot is ' + socket.gethostname())
 
 @bot.command(help="Shuts down the bot")
 async def botshutdown(shutdown):

@@ -1,4 +1,5 @@
 import discord
+import itertools
 from discord.ext import commands
 from colorama import Back, Fore, Style
 import time
@@ -12,7 +13,7 @@ class Client(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix=commands.when_mentioned_or('!'), intents=discord.Intents().all())
         
-        self.cogslist = ["Commands.hello"]
+        self.cogslist = ["Commands.hello","Commands.status"]
         
     async def setup_hook(self):
         for ext in self.cogslist:
@@ -28,6 +29,11 @@ class Client(commands.Bot):
         print (prfx + " Discord Version " + Fore.YELLOW + str(platform.python_version()))
         print (prfx + " Python Version " + Fore.YELLOW + str(platform.python_version()))
         synced = await self.tree.sync()
+        for item in synced:
+            if item:
+                print(prfx + " Imported: " + Fore.YELLOW + str(item))
+            else:
+                print(prfx + " Failed to import commands from: " + Fore.RED + str(item))
         print (prfx + " Slash CMDs Synced " + Fore.YELLOW + str(len(synced)) + " Commands")
         
         print('Logged in as {0.user}'.format(self))

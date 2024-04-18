@@ -17,16 +17,16 @@ class Client(commands.Bot):
     async def setup_hook(self):
         for ext in self.cogslist:
             self.load_extension(ext)
-        self.add_command(flashcardmaker.makeflashcard)
-        self.add_command(flashcardmaker.defineflashcard)
-        self.add_command(flashcardmaker.deleteflashcard)
+        #self.add_command(flashcardmaker.makeflashcard)
+        #self.add_command(flashcardmaker.defineflashcard)
+        #self.add_command(flashcardmaker.deleteflashcard)
     
     async def on_ready(self):
         prfx = (Back.BLACK + Fore.GREEN + time.strftime("%H:%M:%S UTC", time.gmtime()) + Back.RESET + Fore.WHITE + Style.BRIGHT)
         print (prfx + " Logged in as " + Fore.YELLOW + self.user.name)
         print (prfx + " Bot ID " + Fore.YELLOW + str(self.user.id))
         print (prfx + " Discord Version " + Fore.YELLOW + str(platform.python_version()))
-        print (prfx + "Python Version" + Fore.YELLOW + str(platform.python_version()))
+        print (prfx + " Python Version " + Fore.YELLOW + str(platform.python_version()))
         synced = await self.tree.sync()
         print (prfx + " Slash CMDs Synced " + Fore.YELLOW + str(len(synced)) + " Commands")
         

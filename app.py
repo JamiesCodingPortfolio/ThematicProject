@@ -10,8 +10,10 @@ from discord.ext import commands
 import socket
 #imports other folders/dependencies
 from adminCommands import *
-from newCommands import flashcardmaker
+from Commands import flashcardmaker
+from Commands import *
 from variablesImport import BOT_TOKEN, ADMINCHANNEL
+from commandImports import *
 
 #error handling for if the token file is not found
 if BOT_TOKEN == '':
@@ -28,6 +30,7 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 bot.add_command(flashcardmaker.makeflashcard)
 bot.add_command(flashcardmaker.defineflashcard)
 bot.add_command(flashcardmaker.deleteflashcard)
+#bot.add_command(runningCommand.runningbot)
 
 #states that the bot is running, with the name of the device that is running is
 

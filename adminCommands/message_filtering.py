@@ -1,5 +1,6 @@
 from discord.ext import commands
 import requests
+from variablesImport import API_KEY_FOR_MESSAGE_FILTERING
 
 class message_filtering(commands.Cog):
     def __init__(self, client: commands.Bot):
@@ -13,7 +14,7 @@ class message_filtering(commands.Cog):
 
         # Define the headers, which include the API key and host
         headers = {
-            "X-RapidAPI-Key": "ddd6ad419amsh26df8d7beb422b5p1c9cdejsn5f27cc21c893",
+            "X-RapidAPI-Key": API_KEY_FOR_MESSAGE_FILTERING,
             "X-RapidAPI-Host": "community-purgomalum.p.rapidapi.com"
         }
 

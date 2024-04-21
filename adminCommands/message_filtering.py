@@ -4,9 +4,8 @@ from variablesImport import API_KEY_FOR_MESSAGE_FILTERING
 
 class message_filtering(commands.Cog):
     def __init__(self, client: commands.Bot):
-        # Initialize the class with the Discord client
+        # Initialise the class with the Discord client
         self.client = client
-        # Initialize the profanity check object
 
     async def contains_profanity(self, text):
         # Define the URL for the PurgoMalum API request
@@ -18,11 +17,11 @@ class message_filtering(commands.Cog):
             "X-RapidAPI-Host": "community-purgomalum.p.rapidapi.com"
         }
 
-        # Define the parameters, which is the text of the message we want to check
+        # Define the parameter, which is the text of the message we want to check
         params = {"text": text}
         
         # Send a GET request to the PurgoMalum API with the information specified
-        response = await requests.get(url, headers=headers, params=params)
+        response = requests.get(url, headers=headers, params=params)
 
         # Check if the response status code is 200 (OK)
         if response.status_code == 200:
@@ -34,6 +33,7 @@ class message_filtering(commands.Cog):
             return False
         
     # Event listener for message events
+    @commands.Cog.listener()
     async def on_message(self, message):
         # Check if the message contains profanity using PurgoMalum API
         if await self.contains_profanity(message.content):
@@ -44,6 +44,6 @@ class message_filtering(commands.Cog):
             # Send a direct message to the author informing them that their message has been deleted
             await message.author.send("Your message has been deleted because it contains inappropriate content.")
             
-
+# Define a setup function to add the cog to the bot
 async def setup(client:commands.Bot) -> None:
     await client.add_cog(message_filtering(client))

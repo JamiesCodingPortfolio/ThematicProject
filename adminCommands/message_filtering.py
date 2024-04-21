@@ -7,21 +7,21 @@ class message_filtering(commands.Cog):
         # Initialise the class with the Discord client
         self.client = client
 
-        # Initialise the URL for the PurgoMalum API request
-        self.url = "https://community-purgomalum.p.rapidapi.com/containsprofanity"
+    async def contains_profanity(self, text):
+        # Define the URL for the PurgoMalum API request
+        url = "https://community-purgomalum.p.rapidapi.com/containsprofanity"
 
-        # Initialise the headers, which include the API key and host
-        self.headers = {
+        # Define the headers, which include the API key and host
+        headers = {
             "X-RapidAPI-Key": API_KEY_FOR_MESSAGE_FILTERING,
             "X-RapidAPI-Host": "community-purgomalum.p.rapidapi.com"
         }
 
-    async def contains_profanity(self, text):
         # Define the parameter, which is the text of the message we want to check
         params = {"text": text}
         
         # Send a GET request to the PurgoMalum API with the information specified
-        response = requests.get(self.url, headers=self.headers, params=params)
+        response = requests.get(url, headers=headers, params=params)
 
         # Check if the response status code is 200 (OK)
         if response.status_code == 200:

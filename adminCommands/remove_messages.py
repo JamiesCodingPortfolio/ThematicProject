@@ -8,6 +8,10 @@ class remove_messages(commands.Cog):
         
     # Define a slash command to remove messages
     @app_commands.command(name="removeMessages", description="Removes a specific number of messages from the channel")
+
+    # Check if the user has manage_messages permission
+    @commands.has_permissions(manage_messages=True)
+    
     async def remove_messages(self, interaction: discord.Interaction, number: int): 
 
         # Check if the provided number is greater than zero. If not, send an error message and terminate the command

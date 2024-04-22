@@ -14,16 +14,18 @@ sys.path.append(parent_dir)
 
 from variablesImport import ADMINSERVER
 
+
+
 class status(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
-        self.adminserver = int(ADMINSERVER)
-    async def cog_check(self, check):
-        return check.guild is not None and check.guild.id == self.adminserver
-    
+        
+    adminserver = int(ADMINSERVER)
     @app_commands.command(name="status", description="Displays the status of the bot")
-    async def status(self, interaction: discord.Interaction): 
+    @app_commands.guilds(discord.Object(id=adminserver))
+    async def status(self, interaction: discord.Interaction) -> None: 
         await interaction.response.send_message(content='The PC currently running this bot is ' + socket.gethostname())
     
 async def setup(client:commands.Bot) -> None:
     await client.add_cog(status(client))
+    await client.tree.sync(guild=discord.Object(id=status.adminserver))

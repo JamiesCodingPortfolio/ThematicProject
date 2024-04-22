@@ -29,3 +29,4 @@ class status(commands.Cog):
 async def setup(client:commands.Bot) -> None:
     await client.add_cog(status(client))
     await client.tree.sync(guild=discord.Object(id=status.adminserver))
+    print("status synced")

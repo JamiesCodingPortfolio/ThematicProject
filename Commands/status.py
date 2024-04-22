@@ -14,21 +14,14 @@ sys.path.append(parent_dir)
 
 from variablesImport import ADMINSERVER
 
-def is_server():
-    def predicate(ctx) -> bool:
-        return ctx.guild_id == ADMINSERVER
-    return False
-
 class status(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
         self.adminserver = int(ADMINSERVER)
-    def cog_check(self, check):
-        if check.guild.id in self.adminserver:
-            return False
-        return True
+    async def cog_check(self, check):
+        return check.guild is not None and check.guild.id == self.adminserver
+    
     @app_commands.command(name="status", description="Displays the status of the bot")
-    @app_commands.is_server
     async def status(self, interaction: discord.Interaction): 
         await interaction.response.send_message(content='The PC currently running this bot is ' + socket.gethostname())
     

@@ -26,7 +26,7 @@ class message_filtering(commands.Cog):
         # Check if the response status code is 200 (OK)
         if response.status_code == 200:
             # Return True if the response body contains the boolean value True, indicating profanity
-            return response.json() == True
+            return response.json()
         
         # Return False if there was an error in the request or the message doesn't contain profanity
         else:
@@ -36,7 +36,7 @@ class message_filtering(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
         # Check if the message contains profanity using PurgoMalum API
-        if await self.contains_profanity(message.content):
+        if await self.contains_profanity(message.content) == True:
 
             # If profanity is detected, delete the message
             await message.delete()

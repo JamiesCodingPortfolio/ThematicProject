@@ -10,6 +10,9 @@ class remove_messages(commands.Cog):
     @app_commands.command(name="remove_messages", description="Removes a specific number of messages from the channel")
     async def remove_messages(self, interaction: discord.Interaction, number: int): 
 
+        # Defer the interaction to indicate the bot has received it and is working
+        await interaction.response.defer()
+
         # Check if the provided number is greater than zero. If not, send an error message and terminate the command
         if number <= 0:
             await interaction.response.send_message("Please provide a positive number greater than zero.", ephemeral=True)

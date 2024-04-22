@@ -7,7 +7,7 @@ class remove_messages(commands.Cog):
         self.client = client
         
     # Define a slash command to remove messages
-    @app_commands.command(name="removeMessages", description="Removes a specific number of messages from the channel")
+    @app_commands.command(name="remove_messages", description="Removes a specific number of messages from the channel")
 
     # Check if the user has manage_messages permission
     @commands.has_permissions(manage_messages=True)

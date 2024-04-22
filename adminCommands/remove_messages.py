@@ -7,11 +7,16 @@ class remove_messages(commands.Cog):
         self.client = client
         
     # Define a slash command to remove messages
-    @app_commands.command(name="remove_messages", description="Removes a specific number of messages from the channel")
+    @app_commands.command(name="remove_messages", description="Removes a specific number of messages from the channel (admin/mod only)")
     async def remove_messages(self, interaction: discord.Interaction, number: int): 
 
         # Defer the interaction to indicate the bot has received it and is working
         await interaction.response.defer()
+
+        # Check if the user has permission to manage messages
+        if not interaction.user.permissions_in(interaction.channel).manage_messages:
+            await interaction.followup.send("You don't have permission to manage messages.", ephemeral=True)
+            return
 
         # Check if the provided number is greater than zero. If not, send an error message and terminate the command
         if number <= 0:
@@ -25,6 +30,9 @@ class remove_messages(commands.Cog):
         # Include an except block to handle exceptions
         except discord.Forbidden:
             await interaction.response.send_message("I don't have permission to delete messages.", ephemeral=True)
+
+        except discord.HTTPException:
+            await interaction.followup.send("An error occurred while attempting to delete the messages.", ephemeral=True)
 
 # Define a setup function to add the cog to the bot 
 async def setup(client: commands.Bot) -> None:

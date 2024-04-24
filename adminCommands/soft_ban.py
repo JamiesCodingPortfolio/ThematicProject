@@ -13,16 +13,16 @@ class soft_ban(commands.Cog):
         # Defer the interaction to indicate the bot has received it and is working
         await interaction.response.defer()
 
-        # Check if the user has permission to ban members
+        # Check if the user has permission to ban members. If not, tell them they don't have permission
         if not interaction.user.permissions_in(interaction.channel).ban_members:
             await interaction.followup.send("You don't have permission to ban members.", ephemeral=True)
             return
 
         try:
-            # Calculate the duration of the ban
+            # Calculate the duration of the ban based on the hours and minutes entered
             ban_duration = datetime.timedelta(hours=hours, minutes=minutes)
-            unban_time = datetime.datetime.now(datetime.timezone.utc) + ban_duration
 
+            # Ban the user with the reason stated
             await member.ban(reason=reason)
             
             # Purge all messages from the user in the entire server
@@ -32,10 +32,14 @@ class soft_ban(commands.Cog):
             
             # Schedule the unban
             await asyncio.sleep(ban_duration.total_seconds())
+
+            # Once the unban time comes, state that the soft ban has expired
             await member.unban(reason="Soft ban expired.")
 
+            # Send a confirmation message for the ban with the time and reason
             await interaction.followup.send(f"{member.display_name} has been banned for {hours} hours and {minutes} minutes. Reason: {reason}", ephemeral=True)
         
+        # Include an except block to handle exceptions
         except discord.Forbidden:
             await interaction.followup.send("I don't have permission to ban members.", ephemeral=True)
         

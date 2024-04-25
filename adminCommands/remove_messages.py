@@ -13,6 +13,12 @@ class remove_messages(commands.Cog):
         # Defer the interaction first
         await interaction.response.defer()
 
+        # Check if the user has permission to manage messages or if they have admin permissions
+        member = interaction.guild.get_member(interaction.user.id)
+        if not member.guild_permissions.manage_messages and not member.guild_permissions.administrator:
+            await interaction.response.send_message(content="You don't have permission to use this command.", ephemeral=True)
+            return
+
         # Check if the provided number is greater than zero. If not, send an error message and terminate the command
         if number <= 0:
             await interaction.response.send_message(content="Please provide a positive number greater than zero.", ephemeral=True)

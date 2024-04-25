@@ -13,11 +13,24 @@ class soft_ban(commands.Cog):
         # Defer the interaction to indicate the bot has received it and is working
         await interaction.response.defer()
 
-        # Check if the user has permission to ban members. If not, tell them they don't have permission
-        if not interaction.user.permissions_in(interaction.channel).ban_members:
-            await interaction.followup.send("You don't have permission to ban members.", ephemeral=True)
+        # Check if the user invoking the command is the owner
+        if interaction.user.id == interaction.guild.owner_id:
+            await self.perform_soft_ban(interaction, member, hours, minutes, reason)
             return
 
+        # Check if the target user is the owner
+        if member == interaction.guild.owner:
+            await interaction.followup.send("You can't ban the server owner.", ephemeral=True)
+            return
+
+        # Check if the user invoking the command is an admin or mod
+        if interaction.user.guild_permissions.administrator or interaction.user.guild_permissions.ban_members:
+            await self.perform_soft_ban(interaction, member, hours, minutes, reason)
+            return
+
+        await interaction.followup.send("You don't have permission to ban members.", ephemeral=True)
+
+    async def perform_soft_ban(self, interaction: discord.Interaction, member: discord.Member, hours: int, minutes: int, reason: str):
         try:
             # Calculate the duration of the ban based on the hours and minutes entered
             ban_duration = datetime.timedelta(hours=hours, minutes=minutes)
@@ -28,7 +41,7 @@ class soft_ban(commands.Cog):
             # Purge all messages from the user in the entire server
             for guild in self.client.guilds:
                 for channel in guild.text_channels:
-                    await channel.purge(limit=None, check=lambda m: m.author == member)
+                    await channel.purge(limit=None, check=lambda m: m.author == member or m.reference and m.reference.author == member)
             
             # Schedule the unban
             await asyncio.sleep(ban_duration.total_seconds())

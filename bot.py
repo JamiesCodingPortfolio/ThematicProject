@@ -9,6 +9,8 @@ from Commands import flashcardmaker
 from Commands import hello
 from variablesImport import ADMINCHANNEL
 
+prfx = (Back.BLACK + Fore.GREEN + time.strftime("%H:%M:%S UTC", time.gmtime()) + Back.RESET + Fore.WHITE + Style.BRIGHT)
+
 class Client(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix=commands.when_mentioned_or('!'), intents=discord.Intents().all())
@@ -23,7 +25,6 @@ class Client(commands.Bot):
         #self.add_command(flashcardmaker.deleteflashcard)
     
     async def on_ready(self):
-        prfx = (Back.BLACK + Fore.GREEN + time.strftime("%H:%M:%S UTC", time.gmtime()) + Back.RESET + Fore.WHITE + Style.BRIGHT)
         print (prfx + " Logged in as " + Fore.YELLOW + self.user.name)
         print (prfx + " Bot ID " + Fore.YELLOW + str(self.user.id))
         print (prfx + " Discord Version " + Fore.YELLOW + str(platform.python_version()))

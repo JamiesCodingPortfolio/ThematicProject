@@ -13,21 +13,22 @@ class soft_ban(commands.Cog):
         # Defer the interaction to indicate the bot has received it and is working
         await interaction.response.defer()
 
-        # Check if the user invoking the command is the owner
+        # Check if the user invoking the command is the owner. If it is, let them perform a soft ban
         if interaction.user.id == interaction.guild.owner_id:
             await self.perform_soft_ban(interaction, member, hours, minutes, reason)
             return
 
-        # Check if the target user is the owner
+        # Check if the target user is the owner. If it is, tell the person invoking that they can't ban the owner
         if member == interaction.guild.owner:
             await interaction.followup.send("You can't ban the server owner.", ephemeral=True)
             return
 
-        # Check if the user invoking the command is an admin or mod
+        # Check if the user invoking the command is an admin or mod. If they are, let them perform a soft ban
         if interaction.user.guild_permissions.administrator or interaction.user.guild_permissions.ban_members:
             await self.perform_soft_ban(interaction, member, hours, minutes, reason)
             return
 
+        # If the user doesn't have permissions to ban members, tell them this
         await interaction.followup.send("You don't have permission to ban members.", ephemeral=True)
 
     async def perform_soft_ban(self, interaction: discord.Interaction, member: discord.Member, hours: int, minutes: int, reason: str):

@@ -45,8 +45,19 @@ class dbcheck(commands.Cog):
             await interaction.response.send_message(content=message)
         else:
             await interaction.response.send_message(content="JSON Data matches what is currently within Database when compared to JsonExample.")
-    
+    @commands.Cog.listener()
+    async def on_guild_join(self, guild):
+        try:
+            await self.dbcheck(guild)  # Call the dbcheck function with the joined guild
+        except discord.HTTPException as e:
+            print(f"Error running dbcheck for guild {guild.id}: {e}")  # Handle potential errors
+            
 async def setup(client:commands.Bot) -> None:
     await client.add_cog(dbcheck(client))
-    await client.tree.sync(guild=discord.Object(id=dbcheck.adminserver))
+    #server_ids = [1210173480344092674]
+    #for guild_id in server_ids:
+        #guild = client.get_guild(guild_id)  # Get guild object
+        #if guild:
+            #await client.tree.sync(guild=discord.Object(id=guild))  # Sync for specific guild
+    await client.tree.sync(guild=discord.Object(id=ADMINSERVER))
     print(prfx + " db checks synced ")

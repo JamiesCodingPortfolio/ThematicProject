@@ -2,17 +2,13 @@
 from bot import *
 #Logging import to log stuff and setup
 import logging
-logging.basicConfig(level=logging.INFO)
+import logging.handlers
 #For relative pathing for auth token
 from pathlib import Path
 #DiscordPy imports
 import discord
-from discord import app_commands
-from discord.ext import commands
 #imports other folders/dependencies
 from adminCommands import *
-from Commands import flashcardmaker
-from Commands import hello
 from variablesImport import BOT_TOKEN, ADMINCHANNEL
 from commandImports import *
 

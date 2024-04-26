@@ -43,7 +43,8 @@ class message_filtering(commands.Cog):
 
             # Send a direct message to the author informing them that their message has been deleted
             await message.author.send("Your message has been deleted because it contains inappropriate content.")
-            
+    
+    
 # Define a setup function to add the cog to the bot
 async def setup(client:commands.Bot) -> None:
     await client.add_cog(message_filtering(client))

@@ -14,7 +14,3 @@ database = pymongo.MongoClient(database_access_url)
 db = database['BoomBot']
 
 servers = db['servers']
-
-result = servers.find()
-for document in result:
-    print (document["ServerID"])

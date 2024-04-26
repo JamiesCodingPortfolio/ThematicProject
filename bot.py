@@ -15,6 +15,7 @@ prfx = (Back.BLACK + Fore.GREEN + time.strftime("%H:%M:%S UTC", time.gmtime()) +
 class Client(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix=commands.when_mentioned_or('!'), intents=discord.Intents().all())
+        self.devCogs = ["setupCogs.dbchecks"]
         self.cogslist = ["Commands.hello","Commands.status","adminCommands.remove_messages","adminCommands.message_filtering", "adminCommands.soft_ban", "adminCommands.natural_language","adminCommands.timeout"]
         self.db = dbAccess.db
         self.servers = dbAccess.servers
@@ -23,6 +24,8 @@ class Client(commands.Bot):
         
     async def setup_hook(self):
         for ext in self.cogslist:
+            await self.load_extension(ext)
+        for ext in self.devCogs:
             await self.load_extension(ext)
         #self.add_command(flashcardmaker.makeflashcard)
         #self.add_command(flashcardmaker.defineflashcard)

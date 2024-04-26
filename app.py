@@ -9,7 +9,7 @@ from pathlib import Path
 import discord
 #imports other folders/dependencies
 from adminCommands import *
-from variablesImport import BOT_TOKEN, ADMINCHANNEL
+from variablesImport import BOT_TOKEN
 from commandImports import *
 
 #error handling for if the token file is not found

@@ -44,7 +44,10 @@ class Client(commands.Bot):
                 self.db["servers"].insert_one(new_document)
                 print(prfx + f" Create JSON file for server: {server_id} ")
             else: #Called if server already exists in database
-                if existing_document != json_data:
+                existing_document_copy = existing_document.copy()
+                existing_document_copy.pop('_id', None)
+                print(existing_document_copy)
+                if existing_document_copy != json_data:
                     print(prfx + f" Document for server: {server_id} does not match JsonExample. Consider updating the document or JsonExample.")
     
     async def on_ready(self):

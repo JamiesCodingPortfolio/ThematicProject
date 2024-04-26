@@ -47,5 +47,7 @@ class timeout(commands.Cog):
         except discord.HTTPException:
             await interaction.followup.send("An error occurred whilst connecting to the server.", ephemeral=True)
 
-        
-        
+async def setup(client: commands.Bot) -> None:
+    await client.add_cog(timeout(client))
+    await client.tree.sync()
+    print("Timeout Synced")

@@ -1,0 +1,16 @@
+{
+    "ServerID" : "1234",
+    "DefaultCommands":
+    {
+        "hello" : 
+        {
+            "active" : true
+        },
+        "aboutcommands" : 
+        {
+            "active" : true
+        }
+    }
+    
+
+}

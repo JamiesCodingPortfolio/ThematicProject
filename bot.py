@@ -37,14 +37,15 @@ class Client(commands.Bot):
             server_id = str(guild.id)
             existing_document = self.db["servers"].find_one({'ServerID': server_id})
             
-            if existing_document is None:
+            if existing_document is None: #Checks if a document exists within the database with the ID of the server being checked
                 
-                new_document = json_data.copy()
+                new_document = json_data.copy() #Uses copy so that it does not override other documents
                 new_document['ServerID'] = server_id
                 self.db["servers"].insert_one(new_document)
                 print(prfx + f" Create JSON file for server: {server_id} ")
-            else: 
-                pass
+            else: #Called if server already exists in database
+                if existing_document != json_data:
+                    print(prfx + f" Document for server: {server_id} does not match JsonExample. Consider updating the document or JsonExample.")
     
     async def on_ready(self):
         print (prfx + " Logged in as " + Fore.YELLOW + self.user.name)

@@ -32,17 +32,19 @@ class Client(commands.Bot):
         json_example_path = os.path.join(os.path.dirname(__file__), 'JsonExample.json')
         with open(json_example_path, 'r') as json_file:
             json_data = json.load(json_file)
+            
         for guild in self.guilds:
             server_id = str(guild.id)
             existing_document = self.db["servers"].find_one({'ServerID': server_id})
             
             if existing_document is None:
                 
-                new_document = json_data
+                new_document = json_data.copy()
                 new_document['ServerID'] = server_id
-                
                 self.db["servers"].insert_one(new_document)
                 print(prfx + f" Create JSON file for server: {server_id} ")
+            else: 
+                pass
     
     async def on_ready(self):
         print (prfx + " Logged in as " + Fore.YELLOW + self.user.name)

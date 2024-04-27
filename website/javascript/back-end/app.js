@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path')
-const expressStatic = require('express-static')
 
 const app = express();
 const port = 3000;
@@ -11,14 +10,14 @@ app.listen(port, '0.0.0.0', () => {
 });
 // Middleware to parse form data
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(express.static(path.join(__dirname, '../../public')))
 // Database (replace with your actual database interaction)
 let database = {};
 
 // Route to serve the form
 app.get('/', (req, res) => {
   // Send HTML with a form containing an input and submit button
-  const filePath = path.join(__dirname, '../../public')
+  const filePath = path.join(__dirname, '../../public/html/index.html')
   res.sendFile(filePath.toString());
 });
 
@@ -31,8 +30,4 @@ app.post('/', (req, res) => {
 
   // Respond to user with success message
   res.send(`Data updated! Name: ${name}`);
-});
-
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
 });

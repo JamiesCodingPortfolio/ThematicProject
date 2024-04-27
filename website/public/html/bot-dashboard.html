@@ -33,7 +33,7 @@
                 window.location.href = '/';
             }
             
-            fetch('https://discord.com/api/users/@me', {
+            fetch('https://discord.com/api/users/@me/guilds', {
                 headers: {
                     authorization: `${tokenType} ${accessToken}`,
                 },

@@ -12,18 +12,23 @@
         <h1>Thematic project website <h1>
     </header>
     <nav>
-        <a href="../html/index.html">Home</a>
-        <a href="../html/about.html">About</a>
-        <a href="../html/contact.html">Contact</a>
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
     </nav>
     </div>
     <div class="discord-background">
-        <div id="name"></div>
+        <div id="server-container"></div>
     </div>
     <footer>
         &copy; 2024 Boom Bot. All rights reserved.
     </footer>
     <script>
+        function displayServers(server){
+            const container = document.getElementById("server-container")
+            const serverElement = document.createElement("div");
+            serverElement.classList.add("server");
+        }
         window.onload = () => {
             const fragment = new URLSearchParams(window.location.hash.slice(1));
             const [accessToken, tokenType] = [fragment.get('access_token'), fragment.get('token_type')];
@@ -46,6 +51,15 @@
 
                     //set the avatar image by constructing a url to access discord's cdn
                 document.getElementById("avatar").src = `https://cdn.discordapp.com/avatars/${id}/${avatar}.jpg`;
+            })
+            .then(response => {
+                fetch('http://localhost:3000/user-data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(response.JSON)
+                })
             })
             .catch(console.error);
 

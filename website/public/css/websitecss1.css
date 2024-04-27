@@ -91,3 +91,18 @@ div.header {
     font-size: 1.5rem; /* Adjust font size if needed */
     /* Assuming you have FontAwesome icons linked or use alternative icon classes */
   }
+
+
+
+/*bot-dashboard css*/
+.server-container{
+  padding-top: 5vh;
+  width: auto;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 5%;
+}

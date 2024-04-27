@@ -1,9 +1,45 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const path = require('path')
+const path = require('path');
+const { MongoClient } = require('mongodb');
+const fs = require('fs');
 
 const app = express();
 const port = 3000;
+
+async function accessDB(){
+
+  const variablesFile = fs.readFileSync('../../../variables.txt', 'utf-8');
+
+  const firstLine = variablesFile.split('\n')[0];
+
+  const mongoURL = firstLine.slice(12);
+
+  const dbclient = new MongoClient(mongoURL);
+
+  try {
+    
+    await dbclient.connect();
+
+    const db = dbclient.db('BoomBot');
+
+    const collection = db.collection('servers');
+
+    const servers = await collection.find().toArray();
+
+    console.log('Servers', servers);
+
+  }
+
+  catch (error){
+    console.error('An error occured:', error)
+  }
+  finally{
+    await dbclient.close();
+  }
+}
+
+accessDB();
 
 app.listen(port, '0.0.0.0', () => {
   console.log(`Server listening on port ${port}`);
@@ -32,3 +68,5 @@ app.get('/auth/discord', (req, res) => {
   // Respond to user with success message
   //res.send(`Data updated! Name: ${name}`);
 });
+
+app.post('/user-data')

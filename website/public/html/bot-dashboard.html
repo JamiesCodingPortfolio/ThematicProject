@@ -30,7 +30,7 @@
             console.log(accessToken, tokenType)
 
             if (!accessToken) {
-                window.location.href('/')
+                window.location.href = '/';
             }
             
             fetch('https://discord.com/api/users/@me', {

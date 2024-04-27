@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path')
+const expressStatic = require('express-static')
 
 const app = express();
 const port = 3000;
@@ -17,7 +18,8 @@ let database = {};
 // Route to serve the form
 app.get('/', (req, res) => {
   // Send HTML with a form containing an input and submit button
-  res.sendFile(path.join(__dirname, '../../html/index.html'));
+  const filePath = path.join(__dirname, '../../public')
+  res.sendFile(filePath.toString());
 });
 
 // Route to handle form submission

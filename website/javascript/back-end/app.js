@@ -22,12 +22,13 @@ app.get('/', (req, res) => {
 });
 
 // Route to handle form submission
-app.post('/auth/discord', (req, res) => {
+app.get('/auth/discord', (req, res) => {
   const name = req.body.name; // Access submitted data
-
+  const dashboardPath = path.join(__dirname, '../../public/html/bot-dashboard.html');
+  return res.sendFile(dashboardPath);
   // Update database (replace with actual logic)
-  database.name = name;
+  //database.name = name;
 
   // Respond to user with success message
-  res.send(`Data updated! Name: ${name}`);
+  //res.send(`Data updated! Name: ${name}`);
 });

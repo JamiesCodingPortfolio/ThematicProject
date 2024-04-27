@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
 });
 
 // Route to handle form submission
-app.post('/', (req, res) => {
+app.post('/auth/discord', (req, res) => {
   const name = req.body.name; // Access submitted data
 
   // Update database (replace with actual logic)

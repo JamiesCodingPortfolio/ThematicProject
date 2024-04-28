@@ -6,6 +6,7 @@ const fs = require('fs');
 
 const app = express();
 const port = 3000;
+app.use(express.json());
 
 async function accessDB(){
 
@@ -29,6 +30,8 @@ async function accessDB(){
 
     console.log('Servers', servers);
 
+    return servers;
+
   }
 
   catch (error){
@@ -36,6 +39,36 @@ async function accessDB(){
   }
   finally{
     await dbclient.close();
+  }
+}
+
+async function compareServerIDs(receivedData) {
+  try {
+    // Access the database and retrieve the list of servers
+
+    // Used to access the database and retrieve a full list of servers the bot is present in
+
+    const servers = await accessDB();
+
+    const serverIDs = receivedData.serverIDs;
+
+      // Filter the servers based on the received server IDs
+    const matchingServers = servers.filter(server => {
+      // Compare server IDs with the received server IDs array
+      return serverIDs.includes(server.ServerID);
+
+    });
+
+
+      // Log the matching servers for debugging purposes
+      console.log('Matching servers:', matchingServers);
+
+      // Return the list of matching servers
+      return matchingServers;
+      
+  } catch (error) {
+      console.error('An error occurred during comparison:', error);
+      throw error;
   }
 }
 
@@ -47,8 +80,6 @@ app.listen(port, '0.0.0.0', () => {
 // Middleware to parse form data
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../../public')))
-// Database (replace with your actual database interaction)
-let database = {};
 
 // Route to serve the form
 app.get('/', (req, res) => {
@@ -69,4 +100,20 @@ app.get('/auth/discord', (req, res) => {
   //res.send(`Data updated! Name: ${name}`);
 });
 
-app.post('/user-data')
+app.post('/user-data', (req, res) => {
+
+  const data = req.body;
+
+  console.log('Recieved data:', data);
+
+  res.json ({ message: 'Data recieved successfully', receivedData: data });
+
+  compareServerIDs(data)
+  .then(matchingServers => {
+    console.log('Matching servers:', matchingServers);
+  })
+  .catch(error => {
+    console.error('An error occurered:', error)
+  });
+
+});

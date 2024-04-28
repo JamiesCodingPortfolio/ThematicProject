@@ -59,12 +59,11 @@ async function compareServerIDs(receivedData) {
 
     });
 
+    console.log('Matching servers:', matchingServers);
 
-      // Log the matching servers for debugging purposes
-      console.log('Matching servers:', matchingServers);
-
+    const matchingServersIDs = matchingServers.map(server => server.ServerID);
       // Return the list of matching servers
-      return matchingServers;
+      return matchingServersIDs;
       
   } catch (error) {
       console.error('An error occurred during comparison:', error);
@@ -93,11 +92,6 @@ app.get('/auth/discord', (req, res) => {
   const name = req.body.name; // Access submitted data
   const dashboardPath = path.join(__dirname, '../../public/html/bot-dashboard.html');
   return res.sendFile(dashboardPath);
-  // Update database (replace with actual logic)
-  //database.name = name;
-
-  // Respond to user with success message
-  //res.send(`Data updated! Name: ${name}`);
 });
 
 app.post('/user-data', (req, res) => {
@@ -106,14 +100,17 @@ app.post('/user-data', (req, res) => {
 
   console.log('Recieved data:', data);
 
-  res.json ({ message: 'Data recieved successfully', receivedData: data });
-
   compareServerIDs(data)
-  .then(matchingServers => {
-    console.log('Matching servers:', matchingServers);
+    .then(matchingServers => {
+      res.json({
+        message: 'Data received successfully',
+        receivedData: data,
+        matchingServers: matchingServers
+      });
   })
   .catch(error => {
     console.error('An error occurered:', error)
   });
 
 });
+

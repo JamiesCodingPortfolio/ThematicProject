@@ -1,48 +1,40 @@
+html, body {
+  height: 100%;
+}
+
+body{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  height:100%;
+  display: flex;
+  flex-direction: column;
+}
+
 div.header {
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
-    }
-    body{
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    header {
-        background-color: #333;
+  }
+
+
+header {
+        background-color: #24252a;
         color: #fff;
         padding: 10px;
         text-align: center;
     }
-    nav {
-        background-color: #444;
-        color: #fff;
-        text-align: center;
-        padding: 10px;
-    }
-    nav a {
-        text-decoration: none;
-        color: #fff;
-        margin: 0 10px;
-    }
-    main {
-        padding: 20px;
-        text-align: center;
-    }
-    footer {
-        background-color: #333;
-        color: #fff;
-        text-align: center;
-        padding: 10px;
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-    }
-    
-    .button-container {
-        display: flex;
-        justify-content: center;
-    }
+    .bot-logo a {
+      width:100%;
+      display: flex;
+      justify-content: center;
+      img.boombot-icon{
+        height: 150px; 
+        width: auto; 
+        display: block; 
+        margin: 0; 
+  }
+}
 
 .loginwithdiscord {
     height: 100vh;
@@ -51,12 +43,23 @@ div.header {
 .discord-background {
     display: flex;
     align-items: center;
-    justify-content: center;
-    height: 85vh;
+    justify-content: flex-start;
+    flex: 1;
     background-color: #24252a; /* Discord gray color */
     color: white;
     font-family: sans-serif; /* Adjust if needed */
-    width:100%
+    width:100%;
+    max-width: 100%;
+    padding-right: 2%;
+    padding-bottom: 2%;
+    padding-left: 2%;
+    box-sizing: border-box;
+    flex-direction:column;
+  }
+
+  .container{
+    height:100%;
+    display: flex;
   }
   
   .login-container {
@@ -96,13 +99,50 @@ div.header {
 
 /*bot-dashboard css*/
 .server-container{
-  padding-top: 5vh;
-  width: auto;
-  height: auto;
+  width: 100%;
   display: flex;
-  flex-direction: row;
-  align-items: flex-start;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding: 5%;
+  padding: 10px;
+  gap: 20px;
+}
+
+@media only screen and (max-width: 768px){
+  .server-container {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0 10px;
+  }
+}
+.server{
+  display: flex; /* Use flexbox layout */
+  align-items: center; /* Align items vertically in the center */
+  justify-content: flex-start; /* Start the items from the left */
+  width: calc(50% - 20px);
+  min-width: 450px;
+  background-color: #2E2F34;
+  padding: 20px;
+  border-radius: 10px;
+  box-sizing: border-box;
+  gap: 20px; /* Optional: Add gap between the items */
+  transition: background-color 0.2s ease-in-out;
+}
+.server:hover {
+  background-color: #131416; /* Darker blue on hover */
+}
+.server{
+  img.server-icon{
+    border-radius: 20px;
+    height: auto;
+    width: 100px; /* Adjust as needed */
+  }
+  .server-text{
+    text-align: center;
+    flex: 1;
+    h2 {
+      font-family: Verdana, Geneva, Tahoma, sans-serif; /* Use Math Sans font family */
+      font-weight: Bold; /* Ensure bold weight for Math Sans */
+      font-size: 25px;
+    }
+  }
 }

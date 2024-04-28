@@ -8,26 +8,76 @@
 </head>
 <body>
     <div class="header">
-    <header>
-        <h1>Thematic project website <h1>
-    </header>
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
-    </nav>
+        <header>
+            <div class = "bot-logo">
+                <a href="../html/index.html">
+                    <img src="../imgs/boombot.png" class="boombot-icon">
+                </a>
+            </div>
+        </header>
     </div>
     <div class="discord-background">
-        <div id="server-container"></div>
+        <div class="select-bot">
+            <h1>Select a server</h1>
+
+        </div>
+        <div class="server-container" id="server-container"></div>
     </div>
-    <footer>
-        &copy; 2024 Boom Bot. All rights reserved.
-    </footer>
     <script>
-        function displayServers(server){
-            const container = document.getElementById("server-container")
-            const serverElement = document.createElement("div");
-            serverElement.classList.add("server");
+        function displayServers(server, serverIcon, serverUniqID) {
+            console.log(server);
+            console.log(serverIcon);
+            console.log(serverUniqID);
+            const container = document.getElementById("server-container");
+            if (!container) {
+                console.error('Error: server-container element not found.');
+                return;
+            }
+            
+            // Ensure server and server properties are provided
+            if (!server || typeof server !== 'string' || !serverUniqID || typeof serverUniqID !== 'string') {
+                console.error('Error: Invalid server data provided.');
+                return;
+              }
+            const serverElement = document.createElement('div');
+            serverElement.classList.add('server');
+        
+            const img = document.createElement('img');
+            img.classList.add('server-icon');
+
+            if (serverIcon != null){
+                img.src = `https://cdn.discordapp.com/icons/${serverUniqID}/${serverIcon}`; 
+            }
+            else {
+                img.src = "";
+            }
+            img.alt = `${server.name} Server Icon`;
+        
+            const textDiv = document.createElement('div');
+            
+            const h2 = document.createElement('h2');
+            h2.textContent = server;
+            
+            textDiv.appendChild(h2);
+            
+            serverElement.appendChild(img);
+            serverElement.appendChild(textDiv);
+            
+            container.appendChild(serverElement);
+        }
+        function filterServersByIDs(serverIDs, servers) {
+            // Filter the servers based on whether their ID is in the serverIDs array
+            const matchedServers = servers.filter(server => serverIDs.includes(server.id));
+            
+            // Map the matched servers to extract only the ID, name, and icon properties
+            const matchedServersDetails = matchedServers.map(server => ({
+                id: server.id,
+                name: server.name,
+                icon: server.icon
+            }));
+        
+            // Return the array of matched server details
+            return matchedServersDetails;
         }
         window.onload = () => {
             const fragment = new URLSearchParams(window.location.hash.slice(1));
@@ -69,10 +119,31 @@
                 })
                 .then(response  => {
                     console.log('Filtered server IDs have been sent successfully.');
-                    console.log('Response from server:', response);
+                    return response.json();
+                })
+                .then(data => {
+                    // Handle the data received from the server
+                    console.log('Response from server:', data);
+                    
+                    // Access and use the data as needed
+                    // For example, access message and matching servers
+                    const message = data.message;
+                    const receivedData = data.receivedData;
+                    const matchingServers = data.matchingServers;
+                
+                    // Display the data or use it as needed in your application
+                    console.log('Message:', message);
+                    console.log('Received Data:', receivedData);
+                    console.log('Matching Servers:', matchingServers);
+
+                    const finalServers = filterServersByIDs(matchingServers, filteredServers)
+                    console.log('Final servers to display:', finalServers)
+                    finalServers.forEach(server => {
+                        displayServers(server.name, server.icon, server.id);
+                    });
                 })
                 .catch(error => {
-                    console.error('An error occurred while sending the filtered server IDs:', error);
+                    console.error('An error occurred while receiving data from the server:', error);
                 });
             })
             .catch(console.error);

@@ -24,6 +24,20 @@
         <div class="server-container" id="server-container"></div>
     </div>
     <script>
+        function imageSelector() {
+            const links = [
+                "../imgs/randomIcons/discordyellow.png",
+                "../imgs/randomIcons/discordgreen.png",
+                "../imgs/randomIcons/discordred.png",
+                "../imgs/randomIcons/discordgrey.png",
+                "../imgs/randomIcons/discordpink.png",
+                "../imgs/randomIcons/discordblack.png"
+            ];
+            
+            const randomIndex = Math.floor(Math.random() * links.length);
+            
+            return links[randomIndex];
+        }
         function displayServers(server, serverIcon, serverUniqID) {
             console.log(server);
             console.log(serverIcon);
@@ -49,7 +63,8 @@
                 img.src = `https://cdn.discordapp.com/icons/${serverUniqID}/${serverIcon}`; 
             }
             else {
-                img.src = "";
+                const source = imageSelector();
+                img.src = `${source}`;
             }
             img.alt = `${server.name} Server Icon`;
         

@@ -124,7 +124,7 @@ header {
   padding: 20px;
   border-radius: 10px;
   box-sizing: border-box;
-  gap: 20px; /* Optional: Add gap between the items */
+  gap: 50px; /* Optional: Add gap between the items */
   transition: background-color 0.2s ease-in-out;
 }
 .server:hover {

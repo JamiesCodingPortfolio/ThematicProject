@@ -18,9 +18,82 @@
     </header>
     </div>
     <div class="discord-background">
-
+        <div class="select-command">
+            <h1>Commands</h1>
+        </div>
+        <div class="command-container" id="command-container"></div>
     </div>
     <script>
+        function displayCommands(commandName, commandStatus){
+            const container = document.getElementById("command-container");
+            if (!container) {
+                console.error('Error: server-container element not found.');
+                return;
+            }
+            if (typeof commandName !== 'string' || typeof commandStatus !== 'boolean') {
+                console.error('Error: Invalid server data provided - name must be a string and status must be a boolean.');
+                console.log('commandName:', commandName, 'commandStatus:', commandStatus);
+                return;
+            }
+            const commandElement = document.createElement('div');
+            commandElement.classList.add('command');
+
+            const cmdName = document.createElement('h1');
+            cmdName.textContent = `/${commandName}`;
+
+            const cmdStatus = document.createElement('h2');
+            if (commandStatus === true){
+                cmdStatus.textContent = `Command Status: Active`;
+            }
+            else{
+                cmdStatus.textContent = `Command Status: Inactive`;
+            }
+
+
+            const cmdButton = document.createElement('button');
+            cmdButton.classList.add('activate-deactivate');
+            if (commandStatus === true){
+                cmdButton.textContent = 'Deactivate';
+            }
+            else{
+                cmdButton.textContent = 'Activate';
+            }
+            cmdButton.addEventListener('click', () => {
+                if (cmdButton.textContent === 'Deactivate') {
+                    commandStatus = false;
+                    ChangeCommandStatus(commandName, commandStatus)
+                }
+                else {
+                    commandStatus = true;
+                    ChangeCommandStatus(commandName, commandStatus)
+                }
+            });
+
+            commandElement.appendChild(cmdName);
+            commandElement.appendChild(cmdStatus);
+            commandElement.appendChild(cmdButton);
+
+            container.appendChild(commandElement);
+
+        }
+        function getCommandsInfo(defaultCommands) {
+
+            const commandsInfo = [];
+
+            for (const commandName in defaultCommands) {
+                if (defaultCommands.hasOwnProperty(commandName)) {
+
+                    const commandStatus = defaultCommands[commandName].active;
+                    
+                    commandsInfo.push({
+                        name: commandName,
+                        active: commandStatus
+                    });
+                }
+            }
+            
+            return commandsInfo;
+        }
         window.onload = () => {
             const queryServerID = new URLSearchParams(window.location.search);
             const serverID = queryServerID.get('serverUniqID');
@@ -38,16 +111,91 @@
                 return response.json();
             })
             .then(data => {
-                // Handle the data received from the server
-                console.log('Response from server:', data);
-                
-                // Access and use the data as needed
-                // For example, access message and matching servers
-                const message = data.message;
+                const serverInfo = data.matchingServers;
                 const receivedData = data.receivedData;
-                const matchingServers = data.matchingServers;
+
+                serverInfo.forEach(server => {
+
+                    const defaultCommands = server.DefaultCommands;
+                    
+                    const commandsInfo = getCommandsInfo(defaultCommands);
+                    
+                    console.log('Commands information:', commandsInfo);
+                    
+                    commandsInfo.forEach(command => {
+                        console.log('Calling displayCommands with:', command.name, command.active);
+                        displayCommands(command.name, command.active);
+                });
+            });
+        })
+        .catch(error => {
+            console.error('An error occurred while receiving data from the server:', error);
+        });
+    }
+        function requestDataAgain(){
+            const queryServerID = new URLSearchParams(window.location.search);
+            const serverID = queryServerID.get('serverUniqID');
+            console.log("Server ID:", serverID);
+
+            fetch('http://localhost:3000/user-data-server', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ serverIDs: serverID }) // Send only the server IDs
             })
-        }
+            .then(response  => {
+                console.log('Data Successfully sent.');
+                return response.json();
+            })
+            .then(data => {
+                const serverInfo = data.matchingServers;
+                const receivedData = data.receivedData;
+
+                serverInfo.forEach(server => {
+
+                    const defaultCommands = server.DefaultCommands;
+                    
+                    const commandsInfo = getCommandsInfo(defaultCommands);
+                    
+                    console.log('Commands information:', commandsInfo);
+                    
+                    commandsInfo.forEach(command => {
+                        console.log('Calling displayCommands with:', command.name, command.active);
+                        displayCommands(command.name, command.active);
+                });
+            });
+        })
+        .catch(error => {
+            console.error('An error occurred while receiving data from the server:', error);
+        });
+    }
+    function ChangeCommandStatus(cmdName, cmdStatus) {
+        console.log("Sending:",cmdName, cmdStatus);
+        const queryServerID = new URLSearchParams(window.location.search);
+        const serverID = queryServerID.get('serverUniqID');
+        fetch(`http://localhost:3000/command-data`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ serverID, cmdName, cmdStatus })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Server responded with status ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response from server:', data);
+            requestDataAgain();
+        })
+        .catch(error => {
+            console.error('Error in ChangeCommandStatus:', error);
+        });
+    }
+    
     </script>
 </body>
 </html>

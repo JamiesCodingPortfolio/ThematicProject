@@ -155,3 +155,24 @@ header {
     }
   }
 }
+.command-container{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  font-family: Verdana, Geneva, Tahoma, sans-serif; /* Use Math Sans font family */
+  font-weight: Bold; /* Ensure bold weight for Math Sans */
+  font-size: 15px;
+  .command{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+    .activate-deactivate{
+      font-family: Verdana, Geneva, Tahoma, sans-serif; /* Use Math Sans font family */
+      font-weight: Bold; /* Ensure bold weight for Math Sans */
+      color: white;
+      padding: 10px;
+      background-color: #2E2F34;
+    }
+  }
+}

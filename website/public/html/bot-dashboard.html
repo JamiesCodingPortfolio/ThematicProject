@@ -39,9 +39,6 @@
             return links[randomIndex];
         }
         function displayServers(server, serverIcon, serverUniqID) {
-            console.log(server);
-            console.log(serverIcon);
-            console.log(serverUniqID);
             const container = document.getElementById("server-container");
             if (!container) {
                 console.error('Error: server-container element not found.');
@@ -145,11 +142,6 @@
                     const message = data.message;
                     const receivedData = data.receivedData;
                     const matchingServers = data.matchingServers;
-                
-                    // Display the data or use it as needed in your application
-                    console.log('Message:', message);
-                    console.log('Received Data:', receivedData);
-                    console.log('Matching Servers:', matchingServers);
 
                     const finalServers = filterServersByIDs(matchingServers, filteredServers)
                     console.log('Final servers to display:', finalServers)

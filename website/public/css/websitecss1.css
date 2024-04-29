@@ -107,7 +107,7 @@ header {
   gap: 20px;
 }
 
-@media only screen and (max-width: 768px){
+@media only screen and (max-width: 958px){
   .server-container {
     flex-wrap: wrap;
     justify-content: center;

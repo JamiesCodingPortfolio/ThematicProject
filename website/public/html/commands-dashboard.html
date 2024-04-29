@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/websitecss1.css">
+    <title>thematic project</title>
+
+</head>
+<body>
+    <div class="header">
+    <header>
+        <div class = "bot-logo">
+            <a href="../html/index.html">
+                <img src="../imgs/boombot.png" class="boombot-icon">
+            </a>
+        </div>
+    </header>
+    </div>
+    <div class="discord-background">
+
+    </div>
+    <script>
+        window.onload = () => {
+            const queryServerID = new URLSearchParams(window.location.search);
+            const serverID = queryServerID.get('serverUniqID');
+            console.log("Server ID:", serverID);
+
+            fetch('http://localhost:3000/user-data-server', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ serverIDs: serverID }) // Send only the server IDs
+            })
+            .then(response  => {
+                console.log('Data Successfully sent.');
+                return response.json();
+            })
+            .then(data => {
+                // Handle the data received from the server
+                console.log('Response from server:', data);
+                
+                // Access and use the data as needed
+                // For example, access message and matching servers
+                const message = data.message;
+                const receivedData = data.receivedData;
+                const matchingServers = data.matchingServers;
+            })
+        }
+    </script>
+</body>
+</html>

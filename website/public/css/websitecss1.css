@@ -120,9 +120,8 @@ header {
   }
 }
 .server{
-  display: flex; /* Use flexbox layout */
-  align-items: center; /* Align items vertically in the center */
-  justify-content: flex-start; /* Start the items from the left */
+  /* Start the items from the left */
+  cursor: pointer;
   width: calc(50% - 20px);
   min-width: 450px;
   background-color: #2E2F34;
@@ -135,7 +134,12 @@ header {
 .server:hover {
   background-color: #131416; /* Darker blue on hover */
 }
-.server{
+.server .server-redirect a{
+  display: flex;
+  align-items: center; /* Align items vertically in the center */
+  justify-content: flex-start;
+  text-decoration: none;
+  color: inherit;
   img.server-icon{
     border-radius: 20px;
     height: auto;

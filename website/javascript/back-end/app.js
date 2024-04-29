@@ -7,6 +7,8 @@ const fs = require('fs');
 const app = express();
 const port = 3000;
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, '../../public')));
 
 async function accessDB(){
 
@@ -71,6 +73,29 @@ async function compareServerIDs(receivedData) {
   }
 }
 
+async function retrieveData(receivedData) {
+  try {
+    // Access the database and retrieve the list of servers
+
+    // Used to access the database and retrieve a full list of servers the bot is present in
+
+    const servers = await accessDB();
+
+    const serverIDs = receivedData.serverIDs;
+
+      // Filter the servers based on the received server IDs
+    const serverInformation = servers.filter(server => {
+      // Compare server IDs with the received server IDs array
+      return serverIDs.includes(server.ServerID);
+    });
+    console.log("Relevant server info:", serverInformation)
+    return serverInformation
+  } catch (error) {
+    console.error('An error occurred during comparison:', error);
+    throw error;
+}
+}
+
 accessDB();
 
 app.listen(port, '0.0.0.0', () => {
@@ -114,3 +139,46 @@ app.post('/user-data', (req, res) => {
 
 });
 
+app.post('/user-data-server', (req, res) => {
+
+  const data = req.body;
+
+  console.log('Recieved data:', data);
+
+  retrieveData(data)
+    .then(matchingServers => {
+      res.json({
+        message: 'Data received successfully',
+        receivedData: data,
+        matchingServers: matchingServers
+      });
+  })
+  .catch(error => {
+    console.error('An error occurered:', error)
+  });
+
+});
+
+app.post('/server-data', (req, res) => {
+
+  const { serverUniqID } = req.body; // Access serverUniqID from request body
+
+  console.log('Received server ID:', serverUniqID);
+
+  // Implement logic to retrieve data based on serverUniqID
+  // You can potentially access the database or perform other actions
+
+  const serverData = { // Replace with actual data retrieval logic
+    message: 'Server data retrieved successfully',
+    serverUniqID,
+  };
+
+  const dashboardPath = 'http://localhost:3000/html/commands-dashboard.html';
+  const response = {
+    message: serverData.message,
+    serverUniqID: serverData.serverUniqID,
+    redirectUrl: dashboardPath // Set the redirect URL in the response
+  };
+
+  res.json(response);
+});

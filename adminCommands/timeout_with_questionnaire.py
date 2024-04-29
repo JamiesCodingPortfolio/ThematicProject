@@ -1,22 +1,22 @@
-import discord  # Import the Discord library
-from discord.ext import commands  # Import the commands extension from Discord
-from discord import app_commands  # Import app_commands from Discord for slash commands
-import asyncio  # Import asyncio for asynchronous tasks
+import discord
+from discord.ext import commands
+from discord import app_commands
+import asyncio
 from fuzzywuzzy import fuzz  # Import fuzz from fuzzywuzzy for partial string matching
 
-class timeout_with_questionnaire(commands.Cog):  # Define a class for the cog
-    def __init__(self, client):  # Define the constructor method
+class timeout_with_questionnaire(commands.Cog):
+    def __init__(self, client):
         self.client = client  # Assign the bot instance to a class attribute
         self.timeout_room = {}  # Initialize a dictionary to store users in timeout
         self.original_channel_permissions = {}  # Initialize a dictionary to store original channel permissions
-        self.RULES_CHANNEL_ID = 1234567890  # Define the ID of the rules channel
+        self.RULES_CHANNEL_ID = 1234567890
 
         # Define a list of dictionaries for the server rules survey questions and answers
         self.rules_survey = [
-            {"question": "Have you read and understood the server rules?", "answer": "yes"},
-            {"question": "What is the first rule of the server?", "answer": "be respectful"},
-            {"question": "What is the second rule of the server?", "answer": "no spamming"},
-            {"question": "What is the third rule of the server?", "answer": "use appropriate language"},
+            {"question": "What is NSFW and who isn't allowed to see it?", "answer": "NSFW stands for 'Not Safe For Work', and it is content that is not suitable for viewing by minors or individuals in professional or public settings."},
+            {"question": "Why is harassment and cyberbullying forbidden?", "answer": "Harassment and cyberbullying are forbidden to ensure a safe and inclusive environment for all members of the community."},
+            {"question": "Messaging is fine, but what action should you not do when sending messages?", "answer": "Spamming"},
+            {"question": "In which channel is posting your own videos only allowed?", "answer": "Self-promotion"},
         ]
 
     @app_commands.command(name="timeout_user", description="Puts a user in timeout, where they must answer questions about the server rules or be set free manually")
@@ -41,7 +41,7 @@ class timeout_with_questionnaire(commands.Cog):  # Define a class for the cog
             await timeout_channel.set_permissions(user, read_messages=True, send_messages=True)  # Set permissions for the user to read and send messages in the timeout channel
 
             for channel in ctx.guild.channels:  # Loop through all channels in the guild
-                if channel != timeout_channel and channel.id != self.RULES_CHANNEL_ID:  # Exclude the timeout channel and the rules channel
+                if channel != timeout_channel:  # Exclude the timeout channel and the rules channel
                     await channel.set_permissions(user, read_messages=False)  # Restrict the user from reading messages in other channels
 
             # Send a message to the user indicating they are in timeout
@@ -54,7 +54,7 @@ class timeout_with_questionnaire(commands.Cog):  # Define a class for the cog
             await ctx.send(f"An error occurred: {e}")  # Send an error message
 
     async def ask_questions(self, user, timeout_channel):  # Define a method to ask the survey questions
-        while True:  # Run the loop indefinitely until all questions are answered correctly or the user is freed
+        while True:  # Run the loop until all questions are answered correctly or the user is freed
             total_attempts = 3  # Initialize the number of attempts allowed for each question
             current_question = 0  # Initialize the index of the current question
             attempts_left = total_attempts  # Initialize the attempts left for the current set of questions
@@ -70,17 +70,17 @@ class timeout_with_questionnaire(commands.Cog):  # Define a class for the cog
                 # Wait for the user's response
                 response = await self.client.wait_for('message', check=check)
 
-                # Check if the response matches the answer with fuzzy string matching
-                if fuzz.partial_ratio(response.content.lower(), question_data["answer"].lower()) >= 70:
+                # Check if the response matches the answer with partial fuzzy string matching of 30 or more
+                if fuzz.partial_ratio(response.content.lower(), question_data["answer"].lower()) >= 30:
                     current_question += 1  # Move to the next question if the answer is correct
                 else:
-                    attempts_left -= 1  # Decrease the number of attempts left
+                    attempts_left -= 1  # Decrease the number of attempts left if answer is wrong
                     if attempts_left == 0:  # If the user exhausts all attempts
                         await timeout_channel.send("You've used all your attempts. Timeout extended by 5 minutes.")
                         await asyncio.sleep(300)  # Extend timeout by 5 minutes
                         await timeout_channel.send("Please try again.")
                         await asyncio.sleep(30)  # Wait for 30 seconds before allowing the user to try again
-                        attempts_left = total_attempts  # Reset attempts left for the next set of questions
+                        attempts_left = total_attempts  # Reset attempts left to total attempts for the next set of questions
                     else:
                         await timeout_channel.send(f"That's not the correct answer. You have {attempts_left} attempts left.")  # Send a message indicating incorrect answer
 
@@ -111,4 +111,4 @@ class timeout_with_questionnaire(commands.Cog):  # Define a class for the cog
 
 # Define a setup function to add the cog to the bot 
 async def setup(client: commands.Bot) -> None:
-    await client.add_cog(timeout_with_questionnaire(client))  # Add the cog to the bot
+    await client.add_cog(timeout_with_questionnaire(client))

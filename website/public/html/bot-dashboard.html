@@ -52,6 +52,14 @@
               }
             const serverElement = document.createElement('div');
             serverElement.classList.add('server');
+            
+            const linkElement = document.createElement('div');
+            linkElement.classList.add('server-redirect');
+
+            const serverLink = document.createElement('a');
+            serverLink.href = `http://localhost:3000/${serverUniqID}`;
+
+            linkElement.appendChild(serverLink);
         
             const img = document.createElement('img');
             img.classList.add('server-icon');
@@ -71,11 +79,13 @@
             h2.textContent = server;
             
             textDiv.appendChild(h2);
-            
-            serverElement.appendChild(img);
-            serverElement.appendChild(textDiv);
+
+
+            linkElement.appendChild(img);
+            linkElement.appendChild(textDiv);
             
             container.appendChild(serverElement);
+            serverElement.appendChild(linkElement);
         }
         function filterServersByIDs(serverIDs, servers) {
             // Filter the servers based on whether their ID is in the serverIDs array

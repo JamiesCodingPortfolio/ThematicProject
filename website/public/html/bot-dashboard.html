@@ -74,6 +74,7 @@
             img.alt = `${server.name} Server Icon`;
         
             const textDiv = document.createElement('div');
+            textDiv.classList.add('server-text')
             
             const h2 = document.createElement('h2');
             h2.textContent = server;
@@ -81,8 +82,8 @@
             textDiv.appendChild(h2);
 
 
-            linkElement.appendChild(img);
-            linkElement.appendChild(textDiv);
+            serverLink.appendChild(img);
+            serverLink.appendChild(textDiv);
             
             container.appendChild(serverElement);
             serverElement.appendChild(linkElement);

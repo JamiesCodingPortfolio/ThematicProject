@@ -24,17 +24,22 @@ header {
         padding: 10px;
         text-align: center;
     }
-    .bot-logo a {
-      width:100%;
-      display: flex;
+    .bot-logo {
+      display:flex;
       justify-content: center;
-      img.boombot-icon{
-        height: 150px; 
-        width: auto; 
-        display: block; 
-        margin: 0; 
-  }
-}
+      a {
+        width:150px;
+        height:150px;
+        display: flex;
+        justify-content: center;
+        img.boombot-icon{
+          height: 150px; 
+          width: auto; 
+          display: block; 
+          margin: 0; 
+        }
+      }
+    }
 
 .loginwithdiscord {
     height: 100vh;

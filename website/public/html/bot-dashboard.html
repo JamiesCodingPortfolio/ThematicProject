@@ -57,7 +57,9 @@
             linkElement.classList.add('server-redirect');
 
             const serverLink = document.createElement('a');
-            serverLink.href = `http://localhost:3000/${serverUniqID}`;
+            serverLink.addEventListener('click', () => { // Added event listener
+                sendDataToServer(serverUniqID); // Call function to send data
+            });
 
             linkElement.appendChild(serverLink);
         
@@ -167,6 +169,29 @@
             .catch(console.error);
 
         };
+        function sendDataToServer(serverUniqID) {
+            // Send data to server using fetch or similar
+            fetch('http://localhost:3000/server-data', { // Replace with your endpoint
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ serverUniqID }) // Send only serverUniqID
+            })
+            .then(response => response.json())
+            .then(data => {
+              console.log('Response from server:', data);
+              
+              if (data.redirectUrl) {
+                window.location.href = `${data.redirectUrl}?serverUniqID=${serverUniqID}`;
+              } else {
+                console.error('No redirect URL provided by the server.')
+              }
+            })
+            .catch(error => {
+              console.error('An error occurred while sending data:', error);
+            });
+          }
     </script>
 </body>
 </html>

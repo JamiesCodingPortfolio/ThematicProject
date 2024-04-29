@@ -121,6 +121,7 @@ header {
 }
 .server{
   /* Start the items from the left */
+  cursor: pointer;
   width: calc(50% - 20px);
   min-width: 450px;
   background-color: #2E2F34;

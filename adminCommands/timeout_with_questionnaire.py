@@ -88,7 +88,7 @@ class timeout_with_questionnaire(commands.Cog):
                 await self.remove_timeout(user)  # Remove the user from timeout
 
     @app_commands.command(name="free_user", description="Manually free a user from timeout")
-    @commands.has_permissions(manage_members=True)
+    @commands.has_permissions(manage_roles=True)
     async def free(self, ctx, user: discord.Member):  # Define a slash command to manually free a user from timeout
         if user in self.timeout_room:  # Check if the user is in timeout
             await self.timeout_room[user].delete()  # Delete the timeout channel

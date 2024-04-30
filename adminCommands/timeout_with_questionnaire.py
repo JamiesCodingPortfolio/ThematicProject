@@ -9,7 +9,6 @@ class timeout_with_questionnaire(commands.Cog):
         self.client = client  # Assign the bot instance to a class attribute
         self.timeout_room = {}  # Initialize a dictionary to store users in timeout
         self.original_channel_permissions = {}  # Initialize a dictionary to store original channel permissions
-        self.RULES_CHANNEL_ID = 1234567890
 
         # Define a list of dictionaries for the server rules survey questions and answers
         self.rules_survey = [

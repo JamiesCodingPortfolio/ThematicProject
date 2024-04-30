@@ -24,8 +24,26 @@
         <div class="command-container" id="command-container"></div>
     </div>
     <script>
+
+        async function clearCommands() {
+            console.log('Removing elements from the command-container');
+            const container = document.getElementById('command-container');
+        
+            if (container) {
+                while (container.firstChild) {
+                    console.log('Removing child node:', container.firstChild);
+                    container.removeChild(container.firstChild);
+                }
+                console.log('All child nodes removed from container');
+            } else {
+                console.error('command-container not found.');
+            }
+        }
+        
         function displayCommands(commandName, commandStatus){
+            
             const container = document.getElementById("command-container");
+
             if (!container) {
                 console.error('Error: server-container element not found.');
                 return;
@@ -35,6 +53,7 @@
                 console.log('commandName:', commandName, 'commandStatus:', commandStatus);
                 return;
             }
+
             const commandElement = document.createElement('div');
             commandElement.classList.add('command');
 
@@ -60,10 +79,12 @@
             }
             cmdButton.addEventListener('click', () => {
                 if (cmdButton.textContent === 'Deactivate') {
+                    clearCommands();
                     commandStatus = false;
                     ChangeCommandStatus(commandName, commandStatus)
                 }
                 else {
+                    clearCommands();
                     commandStatus = true;
                     ChangeCommandStatus(commandName, commandStatus)
                 }
@@ -121,7 +142,6 @@
                     const commandsInfo = getCommandsInfo(defaultCommands);
                     
                     console.log('Commands information:', commandsInfo);
-                    
                     commandsInfo.forEach(command => {
                         console.log('Calling displayCommands with:', command.name, command.active);
                         displayCommands(command.name, command.active);
@@ -159,8 +179,8 @@
                     const commandsInfo = getCommandsInfo(defaultCommands);
                     
                     console.log('Commands information:', commandsInfo);
-                    
                     commandsInfo.forEach(command => {
+                        
                         console.log('Calling displayCommands with:', command.name, command.active);
                         displayCommands(command.name, command.active);
                 });

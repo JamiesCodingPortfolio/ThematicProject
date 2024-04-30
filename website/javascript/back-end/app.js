@@ -182,3 +182,57 @@ app.post('/server-data', (req, res) => {
 
   res.json(response);
 });
+
+app.post('/command-data', async (req, res) => {
+  const { serverID, cmdName, cmdStatus } = req.body; // Extract data from the request body
+
+  console.log('Received data:', { serverID, cmdName, cmdStatus });
+
+  try {
+      // Access the database
+      const servers = await accessDB();
+
+      // Find the server by ID
+      const server = servers.find(s => s.ServerID === serverID);
+
+      if (!server) {
+          res.status(404).json({ error: 'Server not found' });
+          return;
+      }
+
+      // Find the command in the server's DefaultCommands
+      const command = server.DefaultCommands[cmdName];
+
+      if (!command) {
+          res.status(404).json({ error: 'Command not found' });
+          return;
+      }
+
+      // Update the command's active status
+      command.active = cmdStatus;
+
+      const variablesFile = fs.readFileSync('../../../variables.txt', 'utf-8');
+
+      const firstLine = variablesFile.split('\n')[0];
+
+      const mongoURL = firstLine.slice(12);
+      
+      console.log('MongoDB connection string:', mongoURL);
+      // Save the updated server data back to the database
+      const dbclient = new MongoClient(mongoURL);
+      await dbclient.connect();
+      const db = dbclient.db('BoomBot');
+      const collection = db.collection('servers');
+      await collection.updateOne({ ServerID: serverID }, { $set: server });
+
+      // Close the database connection
+      await dbclient.close();
+
+      // Send a success response
+      res.json({ message: 'Command status updated successfully' });
+
+  } catch (error) {
+      console.error('An error occurred while updating command status:', error);
+      res.status(500).json({ error: 'An error occurred while updating command status' });
+  }
+});

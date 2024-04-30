@@ -33,5 +33,3 @@ def dbUpdate(serverID):
         return "Documents for the following servers do not match JsonExample:\n" + ", ".join(mismatched_servers) + "\nConsider updating the documents or JsonExample."
     else:
         return "JSON Data matches what is currently within Database when compared to JsonExample."
-        
-print(dbUpdate(1210173480344092674))

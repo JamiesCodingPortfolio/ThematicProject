@@ -21,14 +21,12 @@ import dbAccess
 class dbcheck(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
-        self.db = dbAccess.db
-        self.dbUpdate = dbAccess.dbUpdate
         
     adminserver = int(ADMINSERVER)
     @app_commands.command(name="dbcheck", description="Checks if default commands match the current JsonExample file.")
     @app_commands.guilds(discord.Object(id=adminserver))
     async def dbcheck(self, interaction: discord.Interaction) -> None: 
-        response = self.dbUpdate(ADMINSERVER)
+        response = dbAccess.dbUpdate(ADMINSERVER)
         await interaction.response.send_message(content=response)
     @commands.Cog.listener()
     async def on_guild_join(self, guild):

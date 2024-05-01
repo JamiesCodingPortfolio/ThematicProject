@@ -1,11 +1,12 @@
 from discord.ext import commands
 import requests
 from variablesImport import API_KEY_FOR_MESSAGE_FILTERING
+from adminCommands.timeout_with_questionnaire import timeout_with_questionnaire # Import the timeout with questionnaire cog to timeout a user
 
 class message_filtering(commands.Cog):
     def __init__(self, client: commands.Bot):
-        # Initialise the class with the Discord client
         self.client = client
+        self.profanity_count = {}
 
     async def contains_profanity(self, text):
         # Define the URL for the PurgoMalum API request
@@ -38,11 +39,33 @@ class message_filtering(commands.Cog):
         # Check if the message contains profanity using PurgoMalum API
         if await self.contains_profanity(message.content) == True:
 
+            # Get the user ID
+            user_id = str(message.author.id)
+
+            # Increment the profanity count for the user
+            self.profanity_count[user_id] = self.profanity_count.get(user_id, 0) + 1
+
+            # Check if the user has reached the profanity limit
+            if self.profanity_count[user_id] >= 3:
+
+                # If the limit is reached, timeout the user
+                await timeout_with_questionnaire(message.author)  # Call the timeout function from timeout.py
+
+                # Inform the user about the timeout reason
+                await message.author.send("You have been timed out for using profanity multiple times. Please refrain from using inappropriate language.")
+                
+                # Reset the profanity count for the user
+                self.profanity_count[user_id] = 0
+
+
+            else:
+
+                # If the user hasn't reached the limit, inform them about the remaining warnings
+                warnings_left = 3 - self.profanity_count[user_id]
+                await message.author.send(f"Warning: You have {warnings_left} warnings left before being timed out. Please refrain from using inappropriate language.")
+
             # If profanity is detected, delete the message
             await message.delete()
-
-            # Send a direct message to the author informing them that their message has been deleted
-            await message.author.send("Your message has been deleted because it contains inappropriate content.")
     
     
 # Define a setup function to add the cog to the bot

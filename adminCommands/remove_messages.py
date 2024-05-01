@@ -13,9 +13,8 @@ class remove_messages(commands.Cog):
         # Defer the interaction first
         await interaction.response.defer()
 
-        # Check if the user has permission to manage messages or if they have admin permissions
-        member = interaction.guild.get_member(interaction.user.id)
-        if not member.guild_permissions.manage_messages and not member.guild_permissions.administrator:
+        # Check if the user is an administrator
+        if not interaction.author.guild_permissions.manage_messages and not interaction.author.guild_permissions.administrator:
             await interaction.response.send_message(content="You don't have permission to use this command.", ephemeral=True)
             return
 
@@ -31,6 +30,8 @@ class remove_messages(commands.Cog):
         # Include an except block to handle exceptions
         except discord.Forbidden:
             await interaction.followup.send(content="I don't have permission to delete messages.", ephemeral=True)
+        except Exception as e:
+            await interaction.response.send_message(content=f"An error occurred: {e}", ephemeral=True)
 
 # Define a setup function to add the cog to the bot 
 async def setup(client: commands.Bot) -> None:

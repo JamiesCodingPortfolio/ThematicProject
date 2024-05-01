@@ -17,11 +17,7 @@ class Client(commands.Bot):
         super().__init__(command_prefix=commands.when_mentioned_or('!'), intents=discord.Intents().all())
         self.devCogs = ["devCogs.dbchecks", "devCogs.status"]
         self.cogslist = ["Commands.hello","adminCommands.remove_messages","passiveCommands.message_filtering", "passiveCommands.response_to_messages", "adminCommands.soft_ban", "adminCommands.natural_language","adminCommands.timeout"]
-        self.db = dbAccess.db
-        self.servers = dbAccess.servers
-        
-        
-        
+           
     async def setup_hook(self):
         for ext in self.cogslist:
             await self.load_extension(ext)
@@ -35,13 +31,13 @@ class Client(commands.Bot):
             
         for guild in self.guilds:
             server_id = str(guild.id)
-            existing_document = self.db["servers"].find_one({'ServerID': server_id})
+            existing_document = dbAccess.db["servers"].find_one({'ServerID': server_id})
             
             if existing_document is None: #Checks if a document exists within the database with the ID of the server being checked
                 
                 new_document = json_data.copy() #Uses copy so that it does not override other documents
                 new_document['ServerID'] = server_id
-                self.db["servers"].insert_one(new_document)
+                dbAccess.db["servers"].insert_one(new_document)
                 print(prfx + f" Create JSON file for server: {server_id} ")
             else: #Called if server already exists in database
                 if 'DefaultCommands' in existing_document and 'DefaultCommands' in json_data:

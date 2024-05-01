@@ -33,3 +33,20 @@ def dbUpdate(serverID):
         return "Documents for the following servers do not match JsonExample:\n" + ", ".join(mismatched_servers) + "\nConsider updating the documents or JsonExample."
     else:
         return "JSON Data matches what is currently within Database when compared to JsonExample."
+
+def checkIfCommandIsActive(serverID, commandGroup, commandName):
+    server_id = str(serverID)
+    
+    existing_document = servers.find_one({'ServerID': server_id})
+    
+    if commandGroup in existing_document:
+        
+        if commandName in existing_document[commandGroup]:
+            
+            return existing_document[commandGroup][commandName]['active']
+
+        return False
+    
+    print("Command Group does not exist.")
+
+print(checkIfCommandIsActive(1210173480344092674, 'DefaultCommands', 'status'))

@@ -15,8 +15,8 @@ prfx = (Back.BLACK + Fore.GREEN + time.strftime("%H:%M:%S UTC", time.gmtime()) +
 class Client(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix=commands.when_mentioned_or('!'), intents=discord.Intents().all())
-        self.devCogs = ["setupCogs.dbchecks"]
-        self.cogslist = ["Commands.hello","Commands.status","adminCommands.remove_messages","passiveCommands.message_filtering", "passiveCommands.response_to_messages", "adminCommands.soft_ban", "adminCommands.natural_language","adminCommands.timeout", "adminCommands.timeout_with_questionnaire"]
+        self.devCogs = ["devCogs.dbchecks", "devCogs.status"]
+        self.cogslist = ["Commands.hello","adminCommands.remove_messages","passiveCommands.message_filtering", "passiveCommands.response_to_messages", "adminCommands.soft_ban", "adminCommands.natural_language","adminCommands.timeout"]
         self.db = dbAccess.db
         self.servers = dbAccess.servers
         

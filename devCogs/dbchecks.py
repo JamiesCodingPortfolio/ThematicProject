@@ -45,4 +45,4 @@ async def setup(client:commands.Bot) -> None:
         #if guild:
             #await client.tree.sync(guild=discord.Object(id=guild))  # Sync for specific guild
     await client.tree.sync(guild=discord.Object(id=ADMINSERVER))
-    print(prfx + " db checks synced ")
+    print(prfx + " Db checks synced ")

@@ -30,7 +30,7 @@ async function accessDB(){
 
     const servers = await collection.find().toArray();
 
-    console.log('Servers', servers);
+    //console.log('Servers', servers);
 
     return servers;
 
@@ -161,14 +161,11 @@ app.post('/user-data-server', (req, res) => {
 
 app.post('/server-data', (req, res) => {
 
-  const { serverUniqID } = req.body; // Access serverUniqID from request body
+  const { serverUniqID } = req.body; 
 
   console.log('Received server ID:', serverUniqID);
 
-  // Implement logic to retrieve data based on serverUniqID
-  // You can potentially access the database or perform other actions
-
-  const serverData = { // Replace with actual data retrieval logic
+  const serverData = { 
     message: 'Server data retrieved successfully',
     serverUniqID,
   };
@@ -201,7 +198,7 @@ app.post('/command-data', async (req, res) => {
       }
 
       // Find the command in the server's DefaultCommands
-      const command = server.DefaultCommands[cmdName];
+      const command = server.Commands[cmdName];
 
       if (!command) {
           res.status(404).json({ error: 'Command not found' });

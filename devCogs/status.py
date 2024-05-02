@@ -5,7 +5,6 @@ from discord import app_commands
 from discord.ext import commands
 import socket
 from colorama import Fore
-from bot import prfx
 
 # Get the current script's directory
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -15,7 +14,7 @@ parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 
 from variablesImport import ADMINSERVER
-
+from bot import prfx
 
 
 class status(commands.Cog):
@@ -42,4 +41,4 @@ class status(commands.Cog):
 async def setup(client:commands.Bot) -> None:
     await client.add_cog(status(client))
     await client.tree.sync(guild=discord.Object(id=status.adminserver))
-    print("status synced")
+    print(prfx + " Status synced ")

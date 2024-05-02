@@ -197,7 +197,7 @@ app.post('/command-data', async (req, res) => {
           return;
       }
 
-      const commandGroups = ['DefaultCommands', 'adminCommands', 'Commands'];
+      const commandGroups = ['adminCommands', 'Commands'];
 
       // Find the command in the server's DefaultCommands
       let commandFound = false;
@@ -217,7 +217,6 @@ app.post('/command-data', async (req, res) => {
       }
 
       // Update the command's active status
-      command.active = cmdStatus;
 
       const variablesFile = fs.readFileSync('../../../variables.txt', 'utf-8');
 

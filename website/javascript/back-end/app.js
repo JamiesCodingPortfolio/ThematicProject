@@ -197,10 +197,21 @@ app.post('/command-data', async (req, res) => {
           return;
       }
 
-      // Find the command in the server's DefaultCommands
-      const command = server.Commands[cmdName];
+      const commandGroups = ['DefaultCommands', 'adminCommands', 'Commands'];
 
-      if (!command) {
+      // Find the command in the server's DefaultCommands
+      let commandFound = false;
+
+      for (const group of commandGroups) {
+        if (server[group] && server[group][cmdName]) {
+            // Update the command's active status
+            server[group][cmdName].active = cmdStatus;
+            commandFound = true;
+            break; // Exit the loop once a match is found and updated
+        }
+    }
+
+      if (!commandFound) {
           res.status(404).json({ error: 'Command not found' });
           return;
       }
@@ -221,7 +232,7 @@ app.post('/command-data', async (req, res) => {
       const db = dbclient.db('BoomBot');
       const collection = db.collection('servers');
       await collection.updateOne({ ServerID: serverID }, { $set: server });
-
+      console.log('Command Updated')
       // Close the database connection
       await dbclient.close();
 

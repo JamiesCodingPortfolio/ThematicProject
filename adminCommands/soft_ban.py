@@ -21,8 +21,20 @@ class soft_ban(commands.Cog):
         print("Soft ban command received.")
         if dbAccess.checkIfCommandIsActive(ctx.guild.id, 'adminCommands', 'soft_ban'):
             print("Soft ban command is active.")
+
+            # Check if the command is invoked by a message or a slash command
+            if isinstance(ctx, commands.Context):
+                # For message commands
+                author_id = ctx.author.id
+            elif isinstance(ctx, discord.Interaction):
+                # For slash commands
+                author_id = ctx.user.id
+            else:
+                # Unsupported context type
+                return
+
             # Check if the user invoking the command is the owner
-            if ctx.author.id == ctx.guild.owner_id:
+            if author_id == ctx.guild.owner_id:
                 if member == ctx.author:
                     await ctx.send("You can't ban yourself.")
                     return
@@ -35,12 +47,12 @@ class soft_ban(commands.Cog):
                 return
 
             # Check if the user invoking the command has the necessary permissions
-            if not ctx.author.guild_permissions.ban_members:
+            if isinstance(ctx, commands.Context) and not ctx.author.guild_permissions.ban_members:
                 await ctx.send("You don't have permission to ban members.")
                 return
 
             # Check if the user has a lower role than the target user
-            if ctx.author.top_role <= member.top_role:
+            if ctx.guild.get_member(author_id).top_role <= member.top_role:
                 await ctx.send("You can't ban someone with a higher or equal role.")
                 return
 
@@ -48,6 +60,7 @@ class soft_ban(commands.Cog):
             await self.perform_soft_ban(ctx, member, hours, minutes, reason)
         else:
             print("Soft ban command is not active.")
+
 
     async def perform_soft_ban(self, ctx, member: discord.Member, hours: int, minutes: int, reason: str):
         print("Performing soft ban.")

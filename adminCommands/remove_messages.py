@@ -14,7 +14,7 @@ class remove_messages(commands.Cog):
         await interaction.response.defer()
 
         # Check if the user is an administrator
-        if not interaction.author.guild_permissions.manage_messages and not interaction.author.guild_permissions.administrator:
+        if not interaction.user.guild_permissions.manage_messages and not interaction.user.guild_permissions.administrator:
             await interaction.response.send_message(content="You don't have permission to use this command.", ephemeral=True)
             return
 

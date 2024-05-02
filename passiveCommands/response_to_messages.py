@@ -13,7 +13,7 @@ class response_to_messages(commands.Cog):
     async def add_response(self, interaction: discord.Interaction, message: str, response: str): 
 
         # Check if the user is an administrator
-        if not interaction.author.guild_permissions.manage_messages and not interaction.author.guild_permissions.administrator:
+        if not interaction.user.guild_permissions.manage_messages and not interaction.user.guild_permissions.administrator:
             await interaction.response.send_message(content="You don't have permission to use this command.", ephemeral=True)
             return
         
@@ -40,7 +40,7 @@ class response_to_messages(commands.Cog):
         # Check if the message partially matches any trigger and give the appropriate response if so
         for trigger, response in self.responses.items():
             if fuzz.partial_ratio(trigger.lower(), message.content.lower()) >= 40:
-                await message.channel.send(response, ephemeral=True)
+                await message.channel.send(response)
                 break
 
 # Define a setup function to add the cog to the bot 

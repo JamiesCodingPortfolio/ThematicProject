@@ -33,16 +33,31 @@ class soft_ban(commands.Cog):
 
     async def perform_soft_ban(self, interaction: discord.Interaction, member: discord.Member, hours: int, minutes: int, reason: str):
         try:
-            # Calculate the duration of the ban based on the hours and minutes entered
-            ban_duration = datetime.timedelta(hours=hours, minutes=minutes)
-
-            # Ban the user with the reason stated
-            await member.ban(reason=reason)
+            # Send a DM to the banned user
+            try:
+                invite = await interaction.channel.create_invite()
+                ban_message = f"You have been banned from {interaction.guild.name} for {hours} hours and {minutes} minutes. Reason: {reason}\n\nYou can rejoin once unbanned using this invite link: {invite}"
+                await member.send(ban_message)
+            except discord.Forbidden as e:
+                await interaction.followup.send(f"I couldn't send a DM to {member.display_name}: {e}", ephemeral=True)
+                return
             
             # Purge all messages from the user in the entire server
             for guild in self.client.guilds:
                 for channel in guild.text_channels:
-                    await channel.purge(limit=None, check=lambda m: m.author == member or m.reference and m.reference.author == member)
+                    if channel.permissions_for(guild.me).manage_messages:
+                        await channel.purge(limit=None, check=lambda m: m.author == member or m.reference and m.reference.author == member)
+
+            # Ban the user with the reason stated
+            await member.ban(reason=reason)
+
+            # Send a confirmation message for the ban with the time and reason
+            ban_confirmation_message = f"{member.display_name} has been banned for {hours} hours and {minutes} minutes. Reason: {reason}"
+            await interaction.followup.send(ban_confirmation_message, ephemeral=True)
+
+            
+            # Calculate the duration of the ban based on the hours and minutes entered
+            ban_duration = datetime.timedelta(hours=hours, minutes=minutes)
             
             # Schedule the unban
             await asyncio.sleep(ban_duration.total_seconds())
@@ -54,11 +69,11 @@ class soft_ban(commands.Cog):
             await interaction.followup.send(f"{member.display_name} has been banned for {hours} hours and {minutes} minutes. Reason: {reason}", ephemeral=True)
         
         # Include an except block to handle exceptions
-        except discord.Forbidden:
-            await interaction.followup.send("I don't have permission to ban members.", ephemeral=True)
+        except discord.Forbidden as e:
+            await interaction.followup.send(f"I don't have permission to ban members: {e}", ephemeral=True)
         
-        except discord.HTTPException:
-            await interaction.followup.send("An error occurred while attempting to ban the member.", ephemeral=True)
+        except discord.HTTPException as e:
+            await interaction.followup.send(f"An error occurred while attempting to ban the member: {e}", ephemeral=True)
 
 # Define a setup function to add the cog to the bot 
 async def setup(client: commands.Bot) -> None:

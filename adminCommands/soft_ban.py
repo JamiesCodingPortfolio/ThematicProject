@@ -17,65 +17,94 @@ class soft_ban(commands.Cog):
         self.client = client
         
     @app_commands.command(name="soft_ban", description="Bans a user temporarily, also deleting all their messages (admin/mod only)")
-    async def soft_ban(self, interaction: discord.Interaction, member: discord.Member, hours: int, minutes: int, reason: str = None): 
-        if (dbAccess.checkIfCommandIsActive(interaction.guild_id, 'adminCommands', 'soft_ban') == True):
-            # Defer the interaction to indicate the bot has received it and is working
-            await interaction.response.defer()
-
-            # Check if the user invoking the command is the owner. If it is, let them perform a soft ban
-            if interaction.user.id == interaction.guild.owner_id:
-                await self.perform_soft_ban(interaction, member, hours, minutes, reason)
+    async def soft_ban(self, ctx, member: discord.Member, hours: int, minutes: int, reason: str = None): 
+        print("Soft ban command received.")
+        if dbAccess.checkIfCommandIsActive(ctx.guild.id, 'adminCommands', 'soft_ban'):
+            print("Soft ban command is active.")
+            # Check if the user invoking the command is the owner
+            if ctx.author.id == ctx.guild.owner_id:
+                if member == ctx.author:
+                    await ctx.send("You can't ban yourself.")
+                    return
+                await self.perform_soft_ban(ctx, member, hours, minutes, reason)
                 return
 
-            # Check if the target user is the owner. If it is, tell the person invoking that they can't ban the owner
-            if member == interaction.guild.owner:
-                await interaction.followup.send("You can't ban the server owner.", ephemeral=True)
+            # Check if the target user is the owner
+            if member == ctx.guild.owner:
+                await ctx.send("You can't ban the server owner.")
                 return
 
-            # Check if the user invoking the command is an admin or mod. If they are, let them perform a soft ban
-            if interaction.user.guild_permissions.administrator or interaction.user.guild_permissions.ban_members:
-                await self.perform_soft_ban(interaction, member, hours, minutes, reason)
+            # Check if the user invoking the command has the necessary permissions
+            if not ctx.author.guild_permissions.ban_members:
+                await ctx.send("You don't have permission to ban members.")
                 return
 
-            # If the user doesn't have permissions to ban members, tell them this
-            await interaction.followup.send("You don't have permission to ban members.", ephemeral=True)
-            
-            
+            # Check if the user has a lower role than the target user
+            if ctx.author.top_role <= member.top_role:
+                await ctx.send("You can't ban someone with a higher or equal role.")
+                return
+
+            # Perform the soft ban
+            await self.perform_soft_ban(ctx, member, hours, minutes, reason)
         else:
-            await interaction.response.send_message("This command currently isn't active in your server. You can activate it from the bot dashboard.", ephemeral=True)
-            return
+            print("Soft ban command is not active.")
 
-    async def perform_soft_ban(self, interaction: discord.Interaction, member: discord.Member, hours: int, minutes: int, reason: str):
+    async def perform_soft_ban(self, ctx, member: discord.Member, hours: int, minutes: int, reason: str):
+        print("Performing soft ban.")
         try:
             # Send a DM to the banned user
             try:
-                invite = await interaction.channel.create_invite()
-                ban_message = f"You have been banned from {interaction.guild.name} for {hours} hours and {minutes} minutes. Reason: {reason}\n\nYou can rejoin once unbanned using this invite link: {invite}"
+                invite = await ctx.channel.create_invite()
+                ban_message = f"You have been banned from {ctx.guild.name} for {hours} hours and {minutes} minutes. Reason: {reason}\n\nYou can rejoin once unbanned using this invite link: {invite}"
                 await member.send(ban_message)
             except discord.Forbidden as e:
-                await interaction.followup.send(f"I couldn't send a DM to {member.display_name}: {e}", ephemeral=True)
+                await ctx.send(f"I couldn't send a DM to {member.display_name}: {e}")
                 return
-            
-            # Purge all messages from the user in the entire server
-            for guild in self.client.guilds:
-                for channel in guild.text_channels:
-                    await channel.purge(limit=None, check=lambda m: m.author == member or m.reference and m.reference.author == member)
-            
-            # Schedule the unban
-            await asyncio.sleep(ban_duration.total_seconds())
 
-            # Once the unban time comes, state that the soft ban has expired
-            await member.unban(reason="Soft ban expired.")
+            # Concurrently purge all messages from the user in the entire server before banning
+            await asyncio.gather(
+                self.purge_messages(ctx.guild, member),
+                self.ban_user(member, hours, minutes, reason)
+            )
 
-            # Send a confirmation message for the ban with the time and reason
-            await interaction.followup.send(f"{member.display_name} has been banned for {hours} hours and {minutes} minutes. Reason: {reason}", ephemeral=True)
-        
-        # Include an except block to handle exceptions
         except discord.Forbidden as e:
-            await interaction.followup.send(f"I don't have permission to ban members: {e}", ephemeral=True)
-        
+            await ctx.send(f"I don't have permission to ban members: {e}")
+
         except discord.HTTPException as e:
-            await interaction.followup.send(f"An error occurred while attempting to ban the member: {e}", ephemeral=True)
+            await ctx.send(f"An error occurred while attempting to ban the member: {e}")
+
+
+    async def purge_messages(self, guild, member):
+        print("Purging messages.")
+        # Purge all messages from the user in the entire server
+        for channel in guild.text_channels:
+            await channel.purge(limit=None, check=lambda m: m.author == member)
+
+
+    async def ban_user(self, member: discord.Member, hours: int, minutes: int, reason: str):
+        print("Banning user.")
+        # Ban the user with the reason stated
+        await member.ban(reason=reason)
+
+        # Define an editable placeholder for the ban confirmation message
+        ban_confirmation_message = f"{member.display_name} has been banned for {hours} hours and {minutes} minutes. Reason: {reason}"
+        message = await member.guild.system_channel.send(ban_confirmation_message)
+
+        # Schedule the unban
+        unban_time = datetime.datetime.now() + datetime.timedelta(hours=hours, minutes=minutes)
+
+        # Edit the message placeholder with the time until the user is unbanned
+        while datetime.datetime.now() < unban_time:
+            remaining_time = unban_time - datetime.datetime.now()
+            remaining_time_str = f"{remaining_time.seconds // 3600}h {remaining_time.seconds % 3600 // 60}m {remaining_time.seconds % 60}s"
+            await message.edit(content=f"{ban_confirmation_message}\nTime remaining: {remaining_time_str}")
+            await asyncio.sleep(1)  # Update every second
+
+        # Once the unban time comes, state that the soft ban has expired
+        await member.guild.unban(member, reason="Soft ban expired.")
+
+        # Send a message when the user is unbanned
+        await member.guild.system_channel.send(f"{member.display_name} has been unbanned after {hours} hours and {minutes} minutes.")
 
 # Define a setup function to add the cog to the bot 
 async def setup(client: commands.Bot) -> None:

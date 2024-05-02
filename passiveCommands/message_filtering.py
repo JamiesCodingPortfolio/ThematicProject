@@ -20,7 +20,7 @@ class message_filtering(commands.Cog):
     # Function to check if a message contains profanity using PurgoMalum API
     async def contains_profanity(self, text):
         # Define the URL for the PurgoMalum API request
-        url = "https://community-purgomalum.p.rapidapi.com/json"  # Set API URL
+        url = "https://community-purgomalum.p.rapidapi.com/containsprofanity"  # Set API URL
 
         # Define the headers, which include the API key and host
         headers = {
@@ -30,26 +30,29 @@ class message_filtering(commands.Cog):
 
         # Define the parameter, which is the text of the message we want to check
         params = {"text": text}  # Set request parameters
-        
+
         # Send a GET request to the PurgoMalum API with the information specified
         response = requests.get(url, headers=headers, params=params)  # Send API request
 
         # Check if the response status code is 200 (OK)
         if response.status_code == 200:
-            # Return True if the response body contains the boolean value True, indicating profanity
+            # Return True if the response body indicates profanity
             return response.json()  # Return API response
-        
+
         # Return False if there was an error in the request or the message doesn't contain profanity
         else:
             return False  # Return False if error occurs
+
+
+
         
 
 
 
     @commands.Cog.listener()
-    async def on_message(self, message):
+    async def on_message(self, message: discord.Message):
         # Check if the message author is the bot itself
-        if message.author == self.client.user:
+        if message.author == self.bot.user:
             return
         
         user_id = message.author.id
@@ -65,18 +68,21 @@ class message_filtering(commands.Cog):
             if remaining_chances == 0:
                 # If all chances are used, put user in timeout
                 await message.delete()  # Delete message
-                await self.put_in_timeout(message.author, message.channel)  # Put user in timeout
+                await self.put_in_timeout(message.author, message.channel, self)  # Pass self explicitly
                 self.bad_words_count[user_id] = 0  # Reset bad word count for the user
             else:
                 # Inform user about remaining chances
                 await message.delete()  # Delete message
                 await message.author.send(f"You have {remaining_chances} chances left before you are put in timeout.")  # Notify user
-
+                
             await message.author.send("Please refrain from using profanity in the server.")  # Notify user
         
         else:
             # Process commands
-            await self.client.process_commands(message)  # Process user commands
+            await self.bot.process_commands(message)
+
+
+
 
 
 
@@ -86,27 +92,43 @@ class message_filtering(commands.Cog):
 
 
     # Function to put a user in timeout
-    async def put_in_timeout(self, user, channel):
+    async def put_in_timeout(self, user, original_channel, cog):
         # Notify the user and create a timeout channel
-        await channel.send(f"{user.mention} has been put in timeout.")  # Notify user
+        await original_channel.send(f"{user.mention} has been put in timeout.")  # Notify user
         await user.send("You have been put in timeout.")  # Notify user via DM
 
         # Create a new channel for the user
         timeout_channel_name = f'timeout-{user.name}'  # Generate timeout channel name
         overwrites = {
-            channel.guild.default_role: discord.PermissionOverwrite(read_messages=False),  # Set permissions for default role
+            original_channel.guild.default_role: discord.PermissionOverwrite(read_messages=False),  # Set permissions for default role
             user: discord.PermissionOverwrite(read_messages=True, send_messages=True)  # Set permissions for user
         }
-        timeout_channel = await channel.guild.create_text_channel(name=timeout_channel_name, overwrites=overwrites)  # Create timeout channel
+        timeout_channel = await original_channel.guild.create_text_channel(name=timeout_channel_name, overwrites=overwrites)  # Create timeout channel
         await timeout_channel.send(f"{user.mention}, welcome to your timeout channel. Please answer the following questions correctly to be set free. You get 3 chances. If you use all your chances, you have to wait 1 minute before retrying.")  # Notify user in timeout channel
 
-        # Disable user's access to other channels
-        for guild_channel in channel.guild.channels:
-            if guild_channel != timeout_channel:
-                await guild_channel.set_permissions(user, read_messages=False, send_messages=False)  # Disable user's access to other channels
+        # Print debugging information
+        print("Original Channel:", original_channel)
+        print("Timeout Channel:", timeout_channel)
+
+        # Disable user's access to other text channels
+        for channel in original_channel.guild.text_channels:
+            if channel != timeout_channel:
+                overwrites = channel.overwrites_for(user)
+                overwrites.update(read_messages=False, send_messages=False)
+                try:
+                    await channel.set_permissions(user, overwrite=overwrites)  # Disable user's access to other channels
+                    print("Disabled access to channel:", channel)
+                except Exception as e:
+                    print(f"Error disabling access to channel {channel.name}: {e}")
 
         # Ask questions about server rules
-        await self.ask_questions(user, timeout_channel)  # Call function to ask questions
+        await cog.ask_questions(user, timeout_channel)  # Call function to ask questions
+
+
+
+
+
+
 
 
 
@@ -154,11 +176,12 @@ class message_filtering(commands.Cog):
                     else:
                         # If all chances are used, extend timeout by 1 minute
                         await timeout_channel.send("Incorrect! You have used all your chances. Timeout extended by 1 minute.")  # Notify user
-                        await asyncio.sleep(60)  # Wait for 1 minute
+                        await asyncio.sleep(20)  # Wait 20 seconds
                         remaining_chances = total_chances  # Reset remaining chances
                         current_question_index = original_question_index  # Reset to first question
                         await timeout_channel.send(f"{user.mention} Let's start over. First question!")  # Notify user
                         break
+
 
 
 

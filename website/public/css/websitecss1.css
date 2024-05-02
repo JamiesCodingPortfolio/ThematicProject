@@ -203,6 +203,8 @@ header {
       background-color: #2E2F34;
       cursor: pointer;
       transition: background-color 0.2s ease-in-out;
+      border-radius: 15px;
+      padding:0.6em 2em;
     }
     .activate-deactivate:hover {
       background-color: #090a0c; /* Darker blue on hover */

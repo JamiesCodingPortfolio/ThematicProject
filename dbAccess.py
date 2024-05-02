@@ -16,7 +16,7 @@ database = pymongo.MongoClient(database_access_url)
 
 db = database['BoomBot']
 
-servers = db['testservers']
+servers = db['servers']
 
 def dbUpdate(serverID):
     mismatched_servers = []  # Empty list to store server IDs with mismatches
@@ -40,7 +40,7 @@ def checkIfCommandIsActive(serverID, commandGroup, commandName):
     
     existing_document = servers.find_one({'ServerID': server_id})
     
-    if commandGroup in existing_document:
+    if existing_document and commandGroup in existing_document:
         
         if commandName in existing_document[commandGroup]:
             

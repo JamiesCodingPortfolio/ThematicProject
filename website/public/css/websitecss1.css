@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+
+
 html, body {
   height: 100%;
   min-width: 470px;
@@ -13,7 +16,7 @@ body{
 }
 
 div.header {
-        font-family: Arial, sans-serif;
+        font-family: 'Quicksand', sans-serif;
         margin: 0;
         padding: 0;
   }
@@ -53,7 +56,7 @@ header {
     flex: 1;
     background-color: #24252a; /* Discord gray color */
     color: white;
-    font-family: sans-serif; /* Adjust if needed */
+    font-family: 'Quicksand', sans-serif; /* Adjust if needed */
     width:100%;
     max-width: 100%;
     padding-right: 2%;
@@ -144,14 +147,14 @@ header {
   img.server-icon{
     border-radius: 20px;
     height: auto;
-    width: 100px; /* Adjust as needed */
+    width: 100px; 
   }
   .server-text{
     text-align: center;
     flex: 1;
     h2 {
-      font-family: Verdana, Geneva, Tahoma, sans-serif; /* Use Math Sans font family */
-      font-weight: Bold; /* Ensure bold weight for Math Sans */
+      font-family: 'Quicksand', sans-serif; 
+      font-weight: Bold; 
       font-size: 25px;
     }
   }
@@ -180,7 +183,7 @@ header {
   flex-direction:row;
   flex-wrap: wrap;
   justify-content: center;
-  font-family: Verdana, Geneva, Tahoma, sans-serif; /* Use Math Sans font family */
+  font-family: 'Quicksand', sans-serif; /* Use Math Sans font family */
   font-weight: Bold; /* Ensure bold weight for Math Sans */
   font-size: 15px;
   gap: 20px;
@@ -196,7 +199,7 @@ header {
     border-radius: 10px;
     box-sizing: border-box;
     .activate-deactivate{
-      font-family: Verdana, Geneva, Tahoma, sans-serif; /* Use Math Sans font family */
+      font-family: 'Quicksand', sans-serif; /* Use Math Sans font family */
       font-weight: Bold; /* Ensure bold weight for Math Sans */
       color: white;
       padding: 10px;

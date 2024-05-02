@@ -177,8 +177,9 @@ header {
 .command-container{
   display: flex;
   align-items: center;
-  flex-direction: row;
+  flex-direction:row;
   flex-wrap: wrap;
+  justify-content: center;
   font-family: Verdana, Geneva, Tahoma, sans-serif; /* Use Math Sans font family */
   font-weight: Bold; /* Ensure bold weight for Math Sans */
   font-size: 15px;

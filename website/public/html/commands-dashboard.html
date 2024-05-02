@@ -97,14 +97,14 @@
             container.appendChild(commandElement);
 
         }
-        function getCommandsInfo(defaultCommands) {
+        function getCommandsInfo(commands) {
 
             const commandsInfo = [];
 
-            for (const commandName in defaultCommands) {
-                if (defaultCommands.hasOwnProperty(commandName)) {
+            for (const commandName in commands) {
+                if (commands.hasOwnProperty(commandName)) {
 
-                    const commandStatus = defaultCommands[commandName].active;
+                    const commandStatus = commands[commandName].active;
                     
                     commandsInfo.push({
                         name: commandName,
@@ -137,15 +137,25 @@
 
                 serverInfo.forEach(server => {
 
-                    const Commands = server.Commands;
+                    serverInfo.forEach(server => {
+                        console.log('Server data:', server);
+                    });                    
+
+                    const allCommands = {
+                        ...server.Commands,
+                        ...server.adminCommands
+                        
+                    };
                     
-                    const commandsInfo = getCommandsInfo(Commands);
-                    
+                    // Get commands info from the combined dictionary
+                    const commandsInfo = getCommandsInfo(allCommands);
+
                     console.log('Commands information:', commandsInfo);
                     commandsInfo.forEach(command => {
-                        console.log('Calling displayCommands with:', command.name, command.active);
+                        
+                        console.log('Calling Commands with:', command.name, command.active);
                         displayCommands(command.name, command.active);
-                });
+                    });
             });
         })
         .catch(error => {
@@ -174,16 +184,26 @@
 
                 serverInfo.forEach(server => {
 
-                    const Commands = server.Commands;
+                    serverInfo.forEach(server => {
+                        console.log('Server data:', server);
+                    });                    
+
+                    const allCommands = {
+                        ...server.Commands,
+                        ...server.adminCommands
+                        
+                    };
                     
-                    const commandsInfo = getCommandsInfo(Commands);
-                    
+                    // Get commands info from the combined dictionary
+                    const commandsInfo = getCommandsInfo(allCommands);
+
                     console.log('Commands information:', commandsInfo);
                     commandsInfo.forEach(command => {
                         
-                        console.log('Calling displayCommands with:', command.name, command.active);
+                        console.log('Calling Commands with:', command.name, command.active);
                         displayCommands(command.name, command.active);
-                });
+                    });
+
             });
         })
         .catch(error => {

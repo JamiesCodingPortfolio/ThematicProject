@@ -8,48 +8,38 @@ import time
 import platform
 import socket
 from variablesImport import ADMINCHANNEL
-import dbAccess
 
 prfx = (Back.BLACK + Fore.GREEN + time.strftime("%H:%M:%S UTC", time.gmtime()) + Back.RESET + Fore.WHITE + Style.BRIGHT)
+
+import dbAccess
 
 class Client(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix=commands.when_mentioned_or('!'), intents=discord.Intents().all())
         self.devCogs = ["devCogs.dbchecks", "devCogs.status"]
+        print(prfx + " Dev Cogs Initiated.")
         self.cogslist = ["Commands.hello","adminCommands.remove_messages","passiveCommands.message_filtering", "passiveCommands.response_to_messages", "adminCommands.soft_ban", "adminCommands.natural_language","adminCommands.timeout"]
            
     async def setup_hook(self):
-        for ext in self.cogslist:
-            await self.load_extension(ext)
         for ext in self.devCogs:
             await self.load_extension(ext)
+        for ext in self.cogslist:
+            await self.load_extension(ext)
         
-    async def check_servers_against_database(self):
-        json_example_path = os.path.join(os.path.dirname(__file__), 'JsonExample.json')
-        with open(json_example_path, 'r') as json_file:
-            json_data = json.load(json_file)
-            
-        for guild in self.guilds:
-            server_id = str(guild.id)
-            existing_document = dbAccess.db["servers"].find_one({'ServerID': server_id})
-            
-            if existing_document is None: #Checks if a document exists within the database with the ID of the server being checked
-                
-                new_document = json_data.copy() #Uses copy so that it does not override other documents
-                new_document['ServerID'] = server_id
-                dbAccess.db["servers"].insert_one(new_document)
-                print(prfx + f" Create JSON file for server: {server_id} ")
-            else: #Called if server already exists in database
-                if 'DefaultCommands' in existing_document and 'DefaultCommands' in json_data:
-                    if existing_document['DefaultCommands'] != json_data['DefaultCommands']:
-                        print(prfx + f" Document for server: {server_id} does not match JsonExample. Consider updating the document or JsonExample.")
-    
     async def on_ready(self):
         print (prfx + " Logged in as " + Fore.YELLOW + self.user.name)
         print (prfx + " Bot ID " + Fore.YELLOW + str(self.user.id))
         print (prfx + " Discord Version " + Fore.YELLOW + str(platform.python_version()))
         print (prfx + " Python Version " + Fore.YELLOW + str(platform.python_version()))
-        await self.check_servers_against_database()
+        
+        for guild in self.guilds:
+            server_id = str(guild.id)
+            
+            dbAccess.createServerInDatabase(server_id)
+            
+        print("All servers have been checked and updated")
+            
+        
         synced = await self.tree.sync()
         for item in synced:
             if item:

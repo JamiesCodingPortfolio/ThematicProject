@@ -10,5 +10,21 @@
         {
             "active" : true
         }
+    },
+    "adminCommands": {
+        "timeout":
+        {
+            "active": true
+        },
+        "soft_ban":
+        {
+            "active": true
+        }
+    },
+    "Commands":{
+        "hello":
+        {
+            "active": true
+        }
     }
 }

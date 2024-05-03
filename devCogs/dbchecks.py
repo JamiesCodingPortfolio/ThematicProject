@@ -28,10 +28,11 @@ class dbcheck(commands.Cog):
     async def dbcheck(self, interaction: discord.Interaction) -> None: 
         response = dbAccess.dbUpdate(ADMINSERVER)
         await interaction.response.send_message(content=response)
+    
     @commands.Cog.listener()
-    async def on_guild_join(self, guild):
+    async def on_guild_join(self, guild: discord.Guild):
         try:
-            await self.dbcheck(guild)  # Call the dbcheck function with the joined guild
+            dbAccess.createServerInDatabase(guild.id)  # Create server in database if it isn't already present.
         except discord.HTTPException as e:
             print(f"Error running dbcheck for guild {guild.id}: {e}")  # Handle potential errors
             

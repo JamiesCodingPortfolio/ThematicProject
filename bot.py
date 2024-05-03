@@ -17,7 +17,7 @@ class Client(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix=commands.when_mentioned_or('!'), intents=discord.Intents().all())
         self.devCogs = ["devCogs.dbchecks", "devCogs.status"]
-        self.cogslist = ["Commands.hello","adminCommands.remove_messages","passiveCommands.message_filtering", "passiveCommands.response_to_messages", "adminCommands.soft_ban", "natural_language","timeout"]
+        self.cogslist = ["Commands.numbergenerator","Commands.hello","adminCommands.remove_messages","passiveCommands.message_filtering", "passiveCommands.response_to_messages", "adminCommands.soft_ban", "natural_language","timeout"]
         self.db = dbAccess.db
         self.servers = dbAccess.servers
         
